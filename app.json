@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "beautiful",
-    "sdkVersion": "19.0.0",
+    "sdkVersion": "20.0.0",
     "icon": "./images/appIconWhite.png",
     "slug": "beautiful",
     "loading": {
