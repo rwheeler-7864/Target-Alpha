@@ -8,7 +8,7 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import { Feather, MaterialIcons} from '@expo/vector-icons';
 import FooterTabs from '../footerTabs';
 import { openDrawer } from '../../actions/drawer';
-import { ImagePicker } from 'expo';
+import { ImagePicker, FaceDetector, Constants, Camera } from 'expo';
 
 import { NativeAdsManager, InterstitialAdManager, BannerView, AdSettings } from 'react-native-fbads';
 import FullAd from './FullAd';
@@ -19,7 +19,6 @@ class VirtualMakeOver extends Component {
     isPhotoSelected: false,
     selectedPhotoUri: '',
   };
-
   async pickCamera() {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -27,7 +26,8 @@ class VirtualMakeOver extends Component {
     });
 
     if (!result.cancelled) {
-      this.setState({ selectedPhotoUri: result.uri });
+      this.setState({ selectedPhotoUri: result.uri, isPhotoSelected: true });
+      console.log(this.state.selectedPhotoUri)
     }
   }
   async pickImage() {
@@ -37,7 +37,8 @@ class VirtualMakeOver extends Component {
     });
 
     if (!result.cancelled) {
-      this.setState({ selectedPhotoUri: result.uri });
+      this.setState({ selectedPhotoUri: result.uri, isPhotoSelected: true });
+      console.log(this.state.selectedPhotoUri)
     }
   }
   showFullScreenAd = () => {
@@ -54,9 +55,44 @@ class VirtualMakeOver extends Component {
   }
   onBannerAdPress = () => console.log('Ad clicked!');
   onBannerAdError = (event) => console.log('Ad error :(', event.nativeEvent);
+
+  renderLandmarksOfFace(face) {
+    const renderLandmark = position =>
+      position && (
+        <View
+          style={[
+            styles.landmark,
+            {
+              left: position.x - landmarkSize / 2,
+              top: position.y - (landmarkSize + 130) / 2,
+            },
+          ]}
+        />
+      );
+    return (
+      <View key={`landmarks-${face.faceID}`}>
+        {renderLandmark(face.leftEyePosition)}
+        {renderLandmark(face.rightEyePosition)}
+        {renderLandmark(face.leftEarPosition)}
+        {renderLandmark(face.rightEarPosition)}
+        {renderLandmark(face.leftCheekPosition)}
+        {renderLandmark(face.rightCheekPosition)}
+        {renderLandmark(face.leftMouthPosition)}
+        {renderLandmark(face.mouthPosition)}
+        {renderLandmark(face.rightMouthPosition)}
+        {renderLandmark(face.noseBasePosition)}
+        {renderLandmark(face.bottomMouthPosition)}
+      </View>
+    );
+  }
   render() {
+      var that=this;
+      var detectedFaces;
+      if(this.state.isPhotoSelected)
+        detectedFaces=FaceDetector.detectFacesAsync(this.state.selectedPhotoUri,{detectLandmarks: FaceDetector.Constants.Landmarks.all})
+      console.log(detectedFaces);
       return (
-        <Container>
+        <Container style={{backgroundColor:'white'}}>
           <Header style={{backgroundColor: 'white', borderBottomWidth: 0 }}>
             <Left>
               <Button style={{backgroundColor: 'white'}} onPress={() => Actions.pop()} >
@@ -74,7 +110,7 @@ class VirtualMakeOver extends Component {
                 <MaterialIcons name="menu" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </Button>
             </Right>
-          </Header>
+          </Header>{!this.state.selectedPhotoUri?
           <ScrollView style={{marginTop: 20}}>
             <Item style={[styles.beautyContentItem, {flexDirection:'row', flex:1, alignItems:'center', justifyContent:'center', marginBottom:20}]}>
               <Text style={{textAlign:'center', fontSize:16, fontWeight: '700', color:'#4a4a4a'}}>Apply Makeup to a Your Face</Text>
@@ -94,7 +130,7 @@ class VirtualMakeOver extends Component {
                   </Item>
                 </View>
                 <View style={{flexDirection:'row', justifyContent: 'flex-end', flex: 1}}>
-                  <Item style={{alignItems:'center', flexDirection:'column', borderBottomWidth:0}}>
+                  <Item style={{alignItems:'center', flexDirection:'column', borderBottomWidth:0}} onPress={()=> Actions.readyToApply()}>
                     <Image source={require('../../../assets/iconPNG/Grey/Icon-13.png')} />
                     <Text style={{fontSize:14, fontWeight: '500', color:'#949494'}}>Live Video</Text>
                   </Item>
@@ -128,7 +164,19 @@ class VirtualMakeOver extends Component {
               </View>
             </View>
           </ScrollView>
-          <FooterTabs/>
+          :
+          <View style={{backgroundColor:'#000', flex:1,
+    justifyContent: 'center'}}>
+            <Image source={{uri:this.state.selectedPhotoUri}} style={{flex:1, resizeMode:'cover'}}/>
+          </View>}
+          {
+            !this.state.isPhotoSelected && <FooterTabs/>
+          }
+          {
+            detectedFaces && detectedFaces.faces && detectedFaces.faces.map(function(face){
+              that.renderLandmarksOfFace(face)
+            }) 
+          }
         </Container>
       );
   }

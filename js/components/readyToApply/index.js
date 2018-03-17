@@ -1,10 +1,76 @@
 import { Constants, Camera, FileSystem, Permissions } from 'expo';
 import React,{Component} from 'react';
-import { StyleSheet, TouchableOpacity, Slider, Vibration } from 'react-native';
+import { connect } from 'react-redux';
+import { Image, StyleSheet, TouchableOpacity, Slider, Vibration, Dimensions } from 'react-native';
 import { Feather, FontAwesome, MaterialCommunityIcons, Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { Container, View, Text, Button, Icon, Item, Input, Switch, Thumbnail, Header, Left, Right , Title} from 'native-base';
 import GalleryScreen from './galleryScreen';
-
+import { openDrawer } from '../../actions/drawer';
+import Carousel from 'react-native-snap-carousel';
+const { width, height } = Dimensions.get('window');
+const SLIDE_WIDTH = Math.round(width  / 5 - 4);
+const ALL_ITEM_SLIDE_WIDTH = Math.round(width  / 5);
+const ITEM_WIDTH = SLIDE_WIDTH;
+const SLIDER_WIDTH = height;
+const products = [
+  {
+    image: require('../../../images/Palette.jpg'),
+    name: 'Eyeshadow',
+    rating: 4
+  },
+  {
+    image: require('../../../images/Eyeliner.jpg'),
+    name: 'Eyeliner',
+    rating: 3
+  },
+  {
+    image: require('../../../images/Blusher.jpg'),
+    name: 'Blusher',
+    rating: 5
+  },
+  {
+    image: require('../../../images/Softflex.jpg'),
+    name: 'SoftFlex',
+    rating: 4
+  },
+  {
+    image: require('../../../images/Mascara.jpg'),
+    name: 'Mascara',
+    rating: 3
+  },
+  {
+    image: require('../../../images/Lipstick.jpg'),
+    name: 'Lipstick',
+    rating: 5
+  }
+]
+const productItems = [
+  {
+    image: require('../../../images/Covergirl.png'),
+    name: 'COVERGIRL* LashBlast Volume Mascara',
+    color: '#ff0000'
+  },
+  {
+    image: require('../../../images/Maybelline.png'),
+    name: 'Maybelline Sensational Powder Matte Lipstick',
+    color: '#ff2200',
+  },
+  {
+    image: require('../../../images/Pop-arazzi.png'),
+    name: 'Pop-arazzi Special Effects Nail Polish, Never Too Rich 104',
+    color: '#ff0022',
+  },
+  {
+    image: require('../../../images/Covergirl.png'),
+    name: 'COVERGIRL* LashBlast Volume Mascara',
+    color: '#ff5500',
+  },
+  {
+    image: require('../../../images/Maybelline.png'),
+    name: 'Maybelline Sensational Powder Matte Lipstick',
+    color: '#ff0055'
+  }
+]
 const landmarkSize = 2;
 
 const flashModeOrder = {
@@ -29,7 +95,7 @@ class ReadyToApply extends Component {
     zoom: 0,
     autoFocus: 'on',
     depth: 0,
-    type: 'back',
+    type: 'front',
     whiteBalance: 'auto',
     ratio: '16:9',
     ratios: [],
@@ -38,6 +104,7 @@ class ReadyToApply extends Component {
     photos: [],
     faces: [],
     permissionsGranted: false,
+    selectedItem: 0,
   };
 
   async componentWillMount() {
@@ -165,7 +232,7 @@ class ReadyToApply extends Component {
             styles.landmark,
             {
               left: position.x - landmarkSize / 2,
-              top: position.y - landmarkSize / 2,
+              top: position.y - (landmarkSize + 130) / 2,
             },
           ]}
         />
@@ -214,7 +281,25 @@ class ReadyToApply extends Component {
   }
 
   
-
+  _renderProductSlider ({item, index}) {
+      return (
+          <View key={index}  style={{marginTop: 0, width: (width/5-4), height:50, borderRightWidth: 1, borderRightColor: '#ccc'}}>
+            <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+              <Image style={{width: 40, height: 50, resizeMode: 'contain'}} source={item.image}/>
+            </View>
+          </View>
+      );
+  }
+  _renderItemSlider ({item, index}) {
+      return (
+          <View key={index}  style={{marginTop: 0, width: (width/5), height:width/5 - 6}}>
+            <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+              <Item style={{backgroundColor: item.color, width: width/5 - 6, height: width/5 - 6}} ></Item>
+            </View>
+          </View>
+      );
+  }
+  
   render() {
     return (              
       <Container>
@@ -228,6 +313,22 @@ class ReadyToApply extends Component {
           </Right>
         </Header>
         <View style={styles.container}>
+          
+          <View style={{backgroundColor:'white', padding:10}}>
+            <Carousel 
+                autoplay={false}
+                renderItem={this._renderProductSlider.bind(this)}
+                sliderWidth={SLIDER_WIDTH}
+                itemWidth={ITEM_WIDTH}
+                activeSlideAlignment={'start'}
+                inactiveSlideScale={1}
+                loop={true}
+                data={products}
+                autoplayDelay={0}
+                autoplayInterval={1500}
+                inactiveSlideOpacity={1}
+            />
+          </View>
           <Camera
             ref={ref => {
               this.camera = ref;
@@ -279,6 +380,21 @@ class ReadyToApply extends Component {
                 />
               ) : null}
             </View>
+            <View style={{backgroundColor:'transparent', width:'100%'}}>
+              <Carousel 
+                  autoplay={false}
+                  renderItem={this._renderItemSlider.bind(this)}
+                  sliderWidth={SLIDER_WIDTH}
+                  itemWidth={ALL_ITEM_SLIDE_WIDTH}
+                  activeSlideAlignment={'start'}
+                  inactiveSlideScale={1}
+                  loop={true}
+                  data={productItems}
+                  autoplayDelay={0}
+                  autoplayInterval={1500}
+                  inactiveSlideOpacity={1}
+              />
+            </View>
             <View
               style={{
                 flex: 0.1,
@@ -288,30 +404,20 @@ class ReadyToApply extends Component {
                 alignSelf: 'flex-end',
               }}>
               <TouchableOpacity
-                style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
-                onPress={this.zoomIn.bind(this)}>
-                <Text style={styles.flipText}> + </Text>
+                style={[styles.flipButton, styles.picButton, { flex: 1, alignSelf: 'flex-end' }]}
+                >
+                <Text style={styles.flipText}> ALL </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
-                onPress={this.zoomOut.bind(this)}>
-                <Text style={styles.flipText}> - </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.flipButton, { flex: 0.25, alignSelf: 'flex-end' }]}
-                onPress={this.toggleFocus.bind(this)}>
-                <Text style={styles.flipText}> AF : {this.state.autoFocus} </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'flex-end' }]}
+                style={[styles.flipButton, styles.picButton, { flex: 1, alignSelf: 'flex-end' }]}
                 onPress={this.takePicture.bind(this)}>
                 <Text style={styles.flipText}> SNAP </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.flipButton, styles.galleryButton, { flex: 0.25, alignSelf: 'flex-end' }]}
-                onPress={this.toggleView.bind(this)}>
-                <Text style={styles.flipText}> Gallery </Text>
+                style={[styles.flipButton, styles.picButton, { flex: 1, alignSelf: 'flex-end' }]}>
+                <Text style={styles.flipText}> COMPARE </Text>
               </TouchableOpacity>
+
             </View>
             <View style={styles.facesContainer} pointerEvents="none">
               {this.state.faces.map(this.renderFace)}
@@ -403,4 +509,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
-export default ReadyToApply;
+
+
+function bindAction(dispatch) {
+  return {
+    openDrawer: () => dispatch(openDrawer()),
+  };
+}
+
+const mapStateToProps = state => ({
+});
+
+export default connect(mapStateToProps, bindAction)(ReadyToApply);
