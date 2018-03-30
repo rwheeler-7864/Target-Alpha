@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, ScrollView, TouchableHighlight, Dimensions } from 'react-native';
+import { Image, ScrollView, TouchableHighlight, Dimensions, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import autobind from 'class-autobind';
 import { Container, View, Text, Button, Icon, Item, Input, Switch, Thumbnail, Header, Left, Right , Title} from 'native-base';
@@ -11,6 +11,7 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import { openDrawer } from '../../actions/drawer';import Carousel from 'react-native-snap-carousel';
 import FooterTabs from '../footerTabs';
 import Swiper from 'react-native-swiper';
+import Modal from 'react-native-modalbox';
 import PropTypes from 'prop-types';
 const { width, height } = Dimensions.get('window');
 const SLIDE_WIDTH = Math.round(width / 3);
@@ -97,6 +98,7 @@ class Home extends Component {  // eslint-disable-line
   }
   async componentDidMount() {
     await Font.loadAsync({
+      'JosefinSans-Regular': require('../../../assets/josefin-sans/JosefinSans-Regular.ttf'),
       'JosefinSans': require('../../../assets/josefin-sans/JosefinSans-Bold.ttf'),
       'JosefinSans-Thin': require('../../../assets/josefin-sans/JosefinSans-Thin.ttf'),
       'JosefinSans-Light': require('../../../assets/josefin-sans/JosefinSans-Light.ttf'),
@@ -130,6 +132,16 @@ class Home extends Component {  // eslint-disable-line
               </Button>
             </Right>
           </Header>
+          <Modal  backdrop={false}  position={"top"} ref={"modal"}>
+            <View style={{alignItems: 'center', alignSelf:'center', justifyContent: 'center', flex: 1}}>
+              <TouchableOpacity  onPress={()=> Actions.home()} >
+                <Image style={{width:200, height:200}} source={require('../../../images/appIconWhite.png')}/>
+              </TouchableOpacity>
+              <Entypo onPress={()=> this.refs.modal.close()} name="chevron-thin-down" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
+              <Button style={{height: 60, width: 200, paddingLeft:0,paddingRight:0,  borderRadius: 0, backgroundColor: '#c34097', marginTop: 20}} onPress={()=>Actions.virtualMakeOver()}><Text style={{width: '100%', textAlign:'center', fontSize: 13, lineHeight:14}}>Go To Facial Make Up</Text></Button>
+              <Button style={{height: 60, width: 200, paddingLeft:0,paddingRight:0, borderRadius: 0, borderColor:'#4a4a4a', borderWidth: 1, backgroundColor: '#fff', marginTop: 20}} onPress={()=>Actions.nail()}><Text style={{color:'#4a4a4a', fontSize: 13, lineHeight:14, width: '100%', textAlign:'center'}}>Go To Nails Make Up</Text></Button>
+            </View>
+          </Modal>
           <ScrollView>
           <View style={{height: 44}}>
             <Swiper size={44} horizontal={false} autoplay activeDotColor="white" dotColor="#ccc" dotStyle={{borderColor:'white', borderWidth: 1}}>
@@ -143,9 +155,9 @@ class Home extends Component {  // eslint-disable-line
             </Swiper>
           </View>
           <View style={{borderWidth: 4, borderColor: "#b01e53", flexDirection: 'row', flex: 1}}>
-            <Item onPress={()=> Actions.virtualMakeOver()} style={{flexDirection:'row', width: '100%', flex:1}}>
+            <Item onPress={()=> this.refs.modal.open()} style={{flexDirection:'row', width: '100%', flex:1}}>
               <View style={{flexDirection:'row', flex: 1, width: '100%'}}>
-                <Image source={require('../../../images/VirtualMakeover.jpg')} style={{flex: 1, alignSelf:'stretch', alignItems:'stretch'}} />
+                <Image source={require('../../../images/VirtualMakeover.jpg')} style={{flex: 1, alignSelf:'stretch', alignItems:'stretch', width:'100%', resizeMode:'stretch'}} />
                 <View style={{position: 'absolute', bottom: 10, left: 0, alignItems: 'center', width: '100%'}}>
                   <Text style={{color: '#B51E56', fontSize: 50, fontFamily:this.state.fontLoaded?'FreshScript':'Roboto', fontWeight: '700', marginBottom:0, paddingBottom:0, lineHeight: 50}}>
                     virtual
@@ -153,13 +165,13 @@ class Home extends Component {  // eslint-disable-line
                   <Text style={{color: '#4a4a4a', fontSize: 25, fontFamily:this.state.fontLoaded?'JosefinSans':'Roboto', marginBottom:5, marginTop:-7, paddingTop:0, lineHeight:25}}>
                     makeover
                   </Text>
-                  <View style={{alignItems: 'center', flexDirection:'row'}}>
-                    <Text style={{color: '#B51E56', fontSize: 12, fontFamily:this.state.fontLoaded?'JosefinSans':'Roboto'}}>
+                  <View style={{alignItems: 'center', flexDirection:'row', maxWidth: '90%', flexWrap: 'wrap',  justifyContent:'center'}}>
+                    <Text style={{color: '#B51E56', fontSize: width>=375?14:12, fontFamily:this.state.fontLoaded?'JosefinSans':'Roboto'}}>
                       a total beauty experience 
                     </Text>
 
-                    <Text style={{color: '#4a4a4a', marginLeft: 5, fontSize: 12, fontFamily:this.state.fontLoaded?'JosefinSans':'Roboto'}}>
-                      for your face, hair and nail
+                    <Text style={{color: '#4a4a4a', marginLeft: 5, fontSize: width>=375?14:12, fontFamily:this.state.fontLoaded?'JosefinSans-Regular':'Roboto'}}>
+                      for your face, hair and nails
                     </Text>
                   </View>
                 </View>
@@ -173,7 +185,7 @@ class Home extends Component {  // eslint-disable-line
               <Text style={{color: '#B51E56', fontSize: 45, fontFamily: this.state.fontLoaded?'FreshScript':'Roboto'}}>
                 personal
               </Text>
-              <Text style={{paddingLeft: 5, color: '#4a4a4a', fontSize: 20, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
+              <Text style={{paddingLeft: 5, color: '#4a4a4a', fontSize: 20, fontFamily: this.state.fontLoaded?'JosefinSans-Regular':'Roboto'}}>
                 beauty consultant
               </Text>
             </View>
@@ -181,10 +193,10 @@ class Home extends Component {  // eslint-disable-line
           <View style={{borderWidth: 2, borderTopWidth: 0, borderColor: "#b01e53", flexDirection: 'row', flex: 1}}>
             <View style={{borderWidth: 2, borderTopWidth: 0, borderColor: "#b01e53", flexDirection: 'row', flex: 1}}>
 
-              <Image source={require('../../../images/Trending.jpg')} style={{flex: 1}} />
-              <View style={{position: 'absolute', bottom: 10, left: 0, alignItems: 'center', flexDirection:'column', width: '100%'}}>
-                <Text style={{color: '#000', fontSize: 24, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
-                  Trending
+              <Image source={require('../../../images/Trending.jpg')} style={{flex: 1, width: '100%', height: 150, alignItems:'stretch',alignSelf:'stretch', resizeMode:'stretch'}} />
+              <View style={{position: 'absolute', bottom: 15, left: 0, alignItems: 'center', flexDirection:'column', width: '100%'}}>
+                <Text style={{color: '#4a4a4a', fontSize: 24, fontFamily: this.state.fontLoaded?'JosefinSans-Regular':'Roboto'}}>
+                  trending
                 </Text>
                 <Text style={{color: '#B51E56', fontSize: 30, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
                   now 
@@ -194,10 +206,10 @@ class Home extends Component {  // eslint-disable-line
             <View style={{borderWidth: 2, borderTopWidth: 0, borderColor: "#b01e53", flexDirection: 'row', flex: 1}}>
               <Item onPress={()=> Actions.community()} style={{flexDirection:'row', flex: 1,  width: '100%'}}>
                 <View style={{flexDirection:'row', flex: 1, width: '100%'}}>
-                  <Image source={require('../../../images/Community.jpg')} style={{flex: 1, width: '100%', alignItems:'stretch',alignSelf:'stretch'}}/>
+                  <Image source={require('../../../images/Community.jpg')} style={{flex: 1, width: '100%', height: 150, alignItems:'stretch',alignSelf:'stretch', resizeMode:'stretch'}}/>
                 
-                  <View style={{position: 'absolute', bottom: 10, left: 0, alignItems: 'center',  width: '100%'}}>
-                    <Text style={{color: '#000', fontSize: 24, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
+                  <View style={{position: 'absolute', bottom: 15, left: 0, alignItems: 'center',  width: '100%'}}>
+                    <Text style={{color: '#4a4a4a', fontSize: 24, fontFamily: this.state.fontLoaded?'JosefinSans-Regular':'Roboto'}}>
                       your
                     </Text>
                     <Text style={{color: '#B51E56', fontSize: 30, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
@@ -211,9 +223,9 @@ class Home extends Component {  // eslint-disable-line
           <View style={{borderWidth: 2, borderTopWidth: 0, borderColor: "#b01e53", flexDirection: 'row', flex: 1}}>
             <View style={{borderWidth: 2, borderTopWidth: 0, borderColor: "#b01e53", flexDirection: 'row', flex: 1}}>
 
-              <Image source={require('../../../images/Offers.jpg')} style={{flex: 1, height:'100%', alignSelf:'stretch'}} />
-              <View style={{position: 'absolute', bottom: 10, left: 0, alignItems: 'center',  width: '100%'}}>
-                    <Text style={{color: '#4a4a4a', fontSize: 24, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
+              <Image source={require('../../../images/Target-store-image-homepage-todaysoffers.jpg')} style={{flex: 1, width:'100%', height:150, alignSelf:'stretch'}} />
+              <View style={{position: 'absolute', bottom: 15, left: 0, alignItems: 'center',  width: '100%'}}>
+                    <Text style={{color: '#4a4a4a', fontSize: 24, fontFamily: this.state.fontLoaded?'JosefinSans-Regular':'Roboto'}}>
                       today's
                     </Text>
                     <Text style={{color: '#B51E56', fontSize: 30, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
@@ -223,9 +235,9 @@ class Home extends Component {  // eslint-disable-line
             </View>
             <View style={{borderWidth: 2, borderTopWidth: 0, borderColor: "#b01e53", flexDirection: 'row', flex: 1}}>
               
-              <Image source={require('../../../images/UltimateBeautyExperience.jpg')} style={{flex: 1}} />
-              <View style={{position: 'absolute', bottom: 10, left: 0, alignItems: 'center', width: '100%'}}>
-                <Text  style={{color: '#4a4a4a', fontSize: 24, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
+              <Image source={require('../../../images/UltimateBeautyExperience.jpg')} style={{flex: 1,  width:'100%', height:150, alignSelf:'stretch'}} />
+              <View style={{position: 'absolute', bottom: 15, left: 0, alignItems: 'center', width: '100%'}}>
+                <Text  style={{color: '#4a4a4a', fontSize: 24, fontFamily: this.state.fontLoaded?'JosefinSans-Regular':'Roboto'}}>
                   ultimate beauty
                 </Text>
                 <Text  style={{color: '#B51E56', fontSize: 30, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
@@ -234,7 +246,7 @@ class Home extends Component {  // eslint-disable-line
               </View>
             </View>
           </View>
-          <View style={{flexDirection: 'row', width: '80%', marginLeft: '10%', backgroundColor: '#000', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 20, borderBottomRightRadius: 20, backgroundColor: '#e6ddd9'}}>
+          <View style={{flexDirection: 'row', width: '80%', marginLeft: '10%', backgroundColor: '#000', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 20, borderBottomRightRadius: 20, backgroundColor: '#fff'}}>
             <FontAwesome name="angle-double-down" style={{ color: '#B51E56', fontSize: 30, lineHeight: 32, fontWeight: '100' }} />
             <Text style={{color: '#B51E56', fontSize:18, fontWeight: '700', fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}> beauty picks</Text>
             <Text style={{color: '#4a4a4a', fontSize:18, fontWeight: '700', fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}> just for you </Text>
@@ -242,7 +254,7 @@ class Home extends Component {  // eslint-disable-line
           </View>
           <View>
             <Carousel 
-                autoplay={true}
+                autoplay={false}
                 renderItem={this._renderItemSlider.bind(this)}
                 sliderWidth={SLIDER_WIDTH}
                 itemWidth={ITEM_WIDTH}

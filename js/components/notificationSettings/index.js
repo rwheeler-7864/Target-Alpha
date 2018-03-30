@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Image, Platform, ScrollView, Modal, TouchableHighlight, TouchableWithoutFeedback, Switch } from 'react-native';
+import { Image, Platform, ScrollView, Modal, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
 import { Container, View, Text, Button,Content, Icon, Card, Item, Input, Thumbnail, Header, Left, Right, CardItem , Title} from 'native-base';
 import styles from './styles';
 import { Feather, FontAwesome, MaterialCommunityIcons, Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import { Font } from 'expo';
 import { openDrawer } from '../../actions/drawer';
 import FooterTabs from '../footerTabs';
+import Switch from 'react-native-customisable-switch';
 
 const profile = require('../../../images/profile-default.png');
 
@@ -31,7 +32,7 @@ class NotificationSettings extends Component {
                 <Feather name="arrow-left" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </Button>
             </Left>
-            <Text style={styles.topHeaderText}>Notifications</Text>
+            <Text style={[styles.topHeaderText, {top: (Platform.OS == 'android') ? 10: 30}]}>Notifications</Text>
             <Right>
               <Button style={{backgroundColor: 'white'}} onPress={this.props.openDrawer} >
                 <MaterialIcons name="menu" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
@@ -57,7 +58,34 @@ class NotificationSettings extends Component {
                     </Text>
                   </View>
                   <View>
-                    <Switch value={this.state.productReminders} onValueChange={(value) => this.setState({productReminders: value})} style={{borderWidth:0}} />
+                    <Switch
+                      value={this.state.productReminders}
+                      activeText={''}
+                      inactiveText={''}
+                      fontSize={0}
+                      activeTextColor={'rgba(255, 255, 255, 1)'}
+                      inactiveTextColor={'rgba(255, 255, 255, 1)'}
+                      activeBackgroundColor={'#c34097'}
+                      inactiveBackgroundColor={'#222'}
+                      activeButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      inactiveButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      switchWidth={50}
+                      switchHeight={26}
+                      switchBorderRadius={0}
+                      switchBorderColor={'rgba(0, 0, 0, 1)'}
+                      switchBorderWidth={0}
+                      buttonWidth={20}
+                      buttonHeight={20}
+                      buttonBorderRadius={0}
+                      buttonBorderColor={'rgba(0, 0, 0, 1)'}
+                      buttonBorderWidth={0}
+                      animationTime={150}
+                      padding={true}
+                      style={{borderWidth:1}}
+                      onChangeValue={(value) => {
+                        this.setState({productReminders: value})
+                      }}
+                    />
                   </View>
                 </Item>
                 <Item style={[styles.beautyContentItem, {borderBottomWidth: 1, flexDirection: 'row', justifyContent:'space-between'}]}>
@@ -70,7 +98,34 @@ class NotificationSettings extends Component {
                     </Text>
                   </View>
                   <View>
-                    <Switch value={this.state.pushAccountActivity} onValueChange={(value) => this.setState({pushAccountActivity: value})} style={{borderWidth:0}} />
+                    <Switch
+                      value={this.state.pushAccountActivity}
+                      activeText={''}
+                      inactiveText={''}
+                      fontSize={0}
+                      activeTextColor={'rgba(255, 255, 255, 1)'}
+                      inactiveTextColor={'rgba(255, 255, 255, 1)'}
+                      activeBackgroundColor={'#c34097'}
+                      inactiveBackgroundColor={'#222'}
+                      activeButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      inactiveButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      switchWidth={50}
+                      switchHeight={26}
+                      switchBorderRadius={0}
+                      switchBorderColor={'rgba(0, 0, 0, 1)'}
+                      switchBorderWidth={0}
+                      buttonWidth={20}
+                      buttonHeight={20}
+                      buttonBorderRadius={0}
+                      buttonBorderColor={'rgba(0, 0, 0, 1)'}
+                      buttonBorderWidth={0}
+                      animationTime={150}
+                      padding={true}
+                      style={{borderWidth:1}}
+                      onChangeValue={(value) => {
+                        this.setState({pushAccountActivity: value})
+                      }}
+                    />
                   </View>
                 </Item>
                 <Item style={[styles.beautyContentItem, {borderBottomWidth: 1, flexDirection: 'row', justifyContent:'space-between'}]}>
@@ -83,7 +138,34 @@ class NotificationSettings extends Component {
                     </Text>
                   </View>
                   <View>
-                    <Switch value={this.state.productAnnouncements} onValueChange={(value) => this.setState({productAnnouncements: value})} style={{borderWidth:0}} />
+                    <Switch
+                      value={this.state.productAnnouncements}
+                      activeText={''}
+                      inactiveText={''}
+                      fontSize={0}
+                      activeTextColor={'rgba(255, 255, 255, 1)'}
+                      inactiveTextColor={'rgba(255, 255, 255, 1)'}
+                      activeBackgroundColor={'#c34097'}
+                      inactiveBackgroundColor={'#222'}
+                      activeButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      inactiveButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      switchWidth={50}
+                      switchHeight={26}
+                      switchBorderRadius={0}
+                      switchBorderColor={'rgba(0, 0, 0, 1)'}
+                      switchBorderWidth={0}
+                      buttonWidth={20}
+                      buttonHeight={20}
+                      buttonBorderRadius={0}
+                      buttonBorderColor={'rgba(0, 0, 0, 1)'}
+                      buttonBorderWidth={0}
+                      animationTime={150}
+                      padding={true}
+                      style={{borderWidth:1}}
+                      onChangeValue={(value) => {
+                        this.setState({productAnnouncements: value})
+                      }}
+                    />
                   </View>
                 </Item>
                 <Item style={[styles.beautyContentItem, {borderBottomWidth: 1, flexDirection: 'row', justifyContent:'space-between'}]}>
@@ -96,7 +178,34 @@ class NotificationSettings extends Component {
                     </Text>
                   </View>
                   <View>
-                    <Switch value={this.state.ads} onValueChange={(value) => this.setState({ads: value})} style={{borderWidth:0}} />
+                    <Switch
+                      value={this.state.ads}
+                      activeText={''}
+                      inactiveText={''}
+                      fontSize={0}
+                      activeTextColor={'rgba(255, 255, 255, 1)'}
+                      inactiveTextColor={'rgba(255, 255, 255, 1)'}
+                      activeBackgroundColor={'#c34097'}
+                      inactiveBackgroundColor={'#222'}
+                      activeButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      inactiveButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      switchWidth={50}
+                      switchHeight={26}
+                      switchBorderRadius={0}
+                      switchBorderColor={'rgba(0, 0, 0, 1)'}
+                      switchBorderWidth={0}
+                      buttonWidth={20}
+                      buttonHeight={20}
+                      buttonBorderRadius={0}
+                      buttonBorderColor={'rgba(0, 0, 0, 1)'}
+                      buttonBorderWidth={0}
+                      animationTime={150}
+                      padding={true}
+                      style={{borderWidth:1}}
+                      onChangeValue={(value) => {
+                        this.setState({ads: value})
+                      }}
+                    />
                   </View>
                 </Item>
               </View>
@@ -119,7 +228,34 @@ class NotificationSettings extends Component {
                     </Text>
                   </View>
                   <View>
-                    <Switch value={this.state.messages} onValueChange={(value) => this.setState({messages: value})} style={{borderWidth:0}} />
+                    <Switch
+                      value={this.state.messages}
+                      activeText={''}
+                      inactiveText={''}
+                      fontSize={0}
+                      activeTextColor={'rgba(255, 255, 255, 1)'}
+                      inactiveTextColor={'rgba(255, 255, 255, 1)'}
+                      activeBackgroundColor={'#c34097'}
+                      inactiveBackgroundColor={'#222'}
+                      activeButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      inactiveButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      switchWidth={50}
+                      switchHeight={26}
+                      switchBorderRadius={0}
+                      switchBorderColor={'rgba(0, 0, 0, 1)'}
+                      switchBorderWidth={0}
+                      buttonWidth={20}
+                      buttonHeight={20}
+                      buttonBorderRadius={0}
+                      buttonBorderColor={'rgba(0, 0, 0, 1)'}
+                      buttonBorderWidth={0}
+                      animationTime={150}
+                      padding={true}
+                      style={{borderWidth:1}}
+                      onChangeValue={(value) => {
+                        this.setState({messages: value})
+                      }}
+                    />
                   </View>
                 </Item>
                 <Item style={[styles.beautyContentItem, {borderBottomWidth: 1, flexDirection: 'row', justifyContent:'space-between'}]}>
@@ -132,7 +268,34 @@ class NotificationSettings extends Component {
                     </Text>
                   </View>
                   <View>
-                    <Switch value={this.state.textAccountActivity} onValueChange={(value) => this.setState({textAccountActivity: value})} style={{borderWidth:0}} />
+                    <Switch
+                      value={this.state.textAccountActivity}
+                      activeText={''}
+                      inactiveText={''}
+                      fontSize={0}
+                      activeTextColor={'rgba(255, 255, 255, 1)'}
+                      inactiveTextColor={'rgba(255, 255, 255, 1)'}
+                      activeBackgroundColor={'#c34097'}
+                      inactiveBackgroundColor={'#222'}
+                      activeButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      inactiveButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      switchWidth={50}
+                      switchHeight={26}
+                      switchBorderRadius={0}
+                      switchBorderColor={'rgba(0, 0, 0, 1)'}
+                      switchBorderWidth={0}
+                      buttonWidth={20}
+                      buttonHeight={20}
+                      buttonBorderRadius={0}
+                      buttonBorderColor={'rgba(0, 0, 0, 1)'}
+                      buttonBorderWidth={0}
+                      animationTime={150}
+                      padding={true}
+                      style={{borderWidth:1}}
+                      onChangeValue={(value) => {
+                        this.setState({textAccountActivity: value})
+                      }}
+                    />
                   </View>
                 </Item>
                 <Item style={[styles.beautyContentItem, {borderBottomWidth: 0}]}>

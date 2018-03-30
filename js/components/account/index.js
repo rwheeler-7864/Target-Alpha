@@ -30,7 +30,7 @@ class Account extends Component {
   render() {
     // console.disableYellowBox = true;
       return (
-        <Container>
+        <Container style={{backgroundColor:'white'}}>
           <Header style={{backgroundColor: 'white', borderBottomWidth: 0 }}>
             <Left>
               <Button style={{backgroundColor: 'white'}} onPress={() => Actions.pop()} >
@@ -43,7 +43,7 @@ class Account extends Component {
               </Button>
             </Right>
           </Header>
-          <ScrollView style={{marginTop: 20}}>
+          <ScrollView style={{marginTop: 20, backgroundColor:'white'}}>
 
           <Item style={{paddingLeft: 30, paddingRight: 30, borderBottomWidth: 0, marginBottom: 5}}>
             <Text style={{fontSize: 13, color: '#949494', fontWeight: '500'}}>
@@ -56,14 +56,19 @@ class Account extends Component {
             </Text>
           </Item>
           <Item style={[styles.beautyContentItem, {borderBottomWidth: 0, marginBottom: 20, flexDirection: 'row', justifyContent:'space-between'}]}>
-            <Button style={{width: "45%", backgroundColor: "#c34097", borderRadius: 0, marginRight: "10%", justifyContent: "center", alignSelf: "center"}}>
+            <Button onPress={() => Actions.home()} style={{width: "30%", backgroundColor: "#c34097", borderRadius: 0, marginRight: "5%", justifyContent: "center", alignSelf: "center"}}>
               <Text style={{fontSize: 13, color: "white", textAlign: "center", fontWeight: "700"}}>
-                Edit
+                Save
               </Text>
             </Button>
-            <Button style={{width: "45%", backgroundColor: "#fff", borderWidth: 1, borderRadius: 0, borderColor: "#949494", justifyContent: "center", alignSelf: "center"}}  onPress={() => Actions.beautyProfile()} >
+            <Button onPress={() => Actions.beautyProfile()} style={{width: "30%", backgroundColor: "#949494", borderWidth: 1, marginRight: "5%",borderRadius: 0, borderColor: "#949494", justifyContent: "center", alignSelf: "center"}}  onPress={() => Actions.beautyProfile()} >
+              <Text style={{fontWeight: "700", fontSize: 13, textAlign: "center", color: "#fff"}}>
+                Next
+              </Text>
+            </Button>            
+            <Button onPress={() => Actions.home()} style={{width: "30%", backgroundColor: "#fff", borderWidth: 1, borderRadius: 0, borderColor: "#949494", justifyContent: "center", alignSelf: "center"}}  onPress={() => Actions.beautyProfile()} >
               <Text style={{fontWeight: "700", fontSize: 13, textAlign: "center", color: "#949494"}}>
-                Delete
+                Cancel
               </Text>
             </Button>
           </Item>

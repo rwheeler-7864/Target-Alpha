@@ -18,7 +18,7 @@ export default{
   inputContainer: {
     paddingHorizontal: 20,
     paddingBottom: 20,
-    paddingTop: 20
+    paddingTop: 10
   },
   headerText: {
     color: '#4a4a4a',
@@ -31,15 +31,16 @@ export default{
   registerButton: {
     alignSelf: 'stretch',
     borderRadius: 0,
-    paddingTop: 25,
-    paddingBottom: 25,  
+    paddingTop: 15,
+    paddingBottom: 15,  
     justifyContent: 'center',
     backgroundColor: '#c34097',
-    marginBottom: 15,
+    marginBottom: 8,
+    height: 40,
   },
   termsText: {
     flexDirection:'column',
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '700',
     color: '#949494',
   },
@@ -54,7 +55,7 @@ export default{
     textDecorationLine: 'underline',
     color: '#949494',
     fontWeight: '700',
-    fontSize: 14,
+    fontSize: 12,
     flexDirection:'column',
   },
   facebookIcon: {
@@ -67,11 +68,12 @@ export default{
     alignSelf: 'stretch',
     borderRadius: 0,
     borderColor: '#4a4a4a',
-    paddingTop: 25,
-    paddingBottom: 25,  
+    paddingTop: 15,
+    paddingBottom: 15,  
+    height: 40,
     borderWidth: 1,
     justifyContent: 'center',
     backgroundColor: '#fff',
-    marginBottom: 15,
+    marginBottom: 8,
   },
 }

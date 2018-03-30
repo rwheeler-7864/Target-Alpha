@@ -1,14 +1,16 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Image, Platform, ScrollView, Modal, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
-import { Container, View, Text, Button,Content, Icon, Card, Item, Input, Switch, Thumbnail, Header, Left, Right, CardItem , Title} from 'native-base';
+import { Image, Platform, ScrollView, Modal, TouchableHighlight, TouchableWithoutFeedback, Alert } from 'react-native';
+import { Container, View, Text, Button,  List, ListItem, Content, Icon, Card, Item, Input, Thumbnail, Header, Left, Right, CardItem , Title} from 'native-base';
 import styles from './styles';
 import { Feather, FontAwesome, SimpleLineIcons, MaterialCommunityIcons, Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import { Font, ImagePicker } from 'expo';
 import { openDrawer } from '../../actions/drawer';
 import FooterTabs from '../footerTabs';
+import SideBar from '../sideBar';
+import Switch from 'react-native-customisable-switch';
 
 const profile = require('../../../images/profile-default.png');
 const camera = require('../../../images/camera.png');
@@ -17,22 +19,19 @@ class Profile extends Component {
   state = {
     fontLoaded: false,
     name: 'Jane Smith',
-    startDate: 'Acme user Feburary 2018',
     uri: '',
     info: '',
     email: 'janesmith@gmail.com',
-    phone: '015 - 668 - 5558',
+    phone: '',
     gender: '',
     oldPassword: '',
     newPassword: '',
     reTypeNewPassword: '',
     colorBlindMode: false,
-    help: '',
-    privacy: '',
-    terms: '',
-    modalVisible: true,
+    modalVisible: false,
     prfileImageUri: null,
     photoModalVisible: false,
+    sidebar: false,
   };
   async componentDidMount() {
     await Font.loadAsync({
@@ -51,6 +50,83 @@ class Profile extends Component {
       this.setState({ prfileImageUri: result.uri });
     }
   }
+  checkAndMove() {
+    if(this.state.name=='')
+    {
+      Alert.alert(
+         "Please input name"
+      )
+      console.log("Please input name");
+      return false;
+    }
+    if(this.state.uri=='')
+    {
+      Alert.alert(
+         "Please input website url"
+      )
+      console.log("Please input website url");
+      return false;
+    }
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+    if(this.state.email=='')
+    {
+      Alert.alert(
+         "Please input email"
+      )
+      console.log("Please input email");
+      return false;
+    }
+    if(reg.test(this.state.email.toLowerCase()) === false)
+    {
+      Alert.alert(
+         "Incorrect email format"
+      )
+      console.log("Incorrect email format");
+      return false;
+    }
+    if(this.state.phone.toString()=='')
+    {
+      Alert.alert(
+         "Please input phone number"
+      )
+      console.log("Please input phone number");
+      return false;
+    }
+    if(this.state.phone.toString().length!=10)
+    {
+      console.log(this.state.phone.length)
+      Alert.alert(
+         "Phone numbers must be 10 numbers"
+      )
+      console.log("Phone numbers must be 10 numbers");
+      return false;
+    }
+    if(this.state.gender=='')
+    {
+      Alert.alert(
+         "Please input your gender"
+      )
+      console.log("Please input gender");
+      return false;
+    }
+    if((this.state.newPassword!='')&&(this.state.oldPassword=='')){
+      Alert.alert(
+         "Please input your old password"
+      )
+      console.log("Please input old password");
+      return false;
+
+    }
+    if(this.state.newPassword!=this.state.reTypeNewPassword)
+    {
+      Alert.alert(
+         "Password doesn't match"
+      )
+      console.log("Password doesn't match");
+      return false;
+    }
+    this.setState({modalVisible: true})
+  }
   async pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -64,9 +140,11 @@ class Profile extends Component {
   render() {
     // console.disableYellowBox = true;
       return (
-        <Container>
- 
-          <Modal animationType="slide" transparent={true} style={styles.modal} backdrop={false}  position={"bottom"} visible={this.state.photoModalVisible}>
+        <Container  style={{backgroundColor:'white'}}>
+          <View style={{height:'100%', width: 300, display:this.state.sidebar?'flex':'none', shadowOffset:{  width: 2,  height: 0,  }, shadowColor: '#949494', shadowOpacity: 1.0, position:'absolute', zIndex:10000000}}>
+            <SideBar/>
+          </View>
+          <Modal animationType="slide" transparent={true} style={styles.modal} backdrop={false}  position={"bottom"} visible={this.state.photoModalVisible && (Actions.currentScene=='profile')}>
             <TouchableHighlight   onPress={() => this.setState({photoModalVisible: false})}>
               <View style={styles.modalView }>
                 <TouchableWithoutFeedback  onPress={() => {return false;}} >
@@ -82,7 +160,7 @@ class Profile extends Component {
             </TouchableHighlight>
           </Modal>
       
-          <Modal animationType="fade" transparent={true} visible={this.state.modalVisible} >
+          <Modal animationType="fade" transparent={true} visible={this.state.modalVisible && (Actions.currentScene=='profile')} >
             <TouchableHighlight   onPress={() => this.setState({modalVisible: false})}>
               <View style={styles.modalView }>
                 <TouchableWithoutFeedback  onPress={() => {return false;}} >
@@ -114,7 +192,7 @@ class Profile extends Component {
               </Button>
             </Left>
             <Right >
-              <Button style={{backgroundColor: 'white'}} onPress={this.props.openDrawer} >
+              <Button style={{backgroundColor: 'white'}} onPress={()=> this.setState({sidebar: !this.state.sidebar})} >
                 <MaterialIcons name="menu" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </Button>
             </Right>
@@ -138,7 +216,6 @@ class Profile extends Component {
                   :
                 (<Text style={styles.name}>{this.state.name}</Text>)
             }
-            <Text style={styles.startDate}>{this.state.startDate}</Text>
           </View>
           <ScrollView style={{marginTop: 20}}>
           <View style={styles.section}>
@@ -146,10 +223,10 @@ class Profile extends Component {
               Basic Profile
             </Text>
             <View style={styles.contentWrap}>
-              <View style={[styles.content, {backgroundColor: '#949494'}]}>
+              <View style={[styles.content]}>
                 <Item style={[styles.basicContentItem, {borderBottomWidth: 1}]}>
 
-                    <FontAwesome name="user" size={20} style={[styles.contentIcon, {color: '#4a4a4a'}]}/>
+                    
                     <Input
                       style={{ fontSize: 14, fontWeight: '700', color: '#4a4a4a'}}
                       placeholder="Full Name"
@@ -162,7 +239,6 @@ class Profile extends Component {
               
               <View style={styles.content}>   
                 <Item style={[styles.basicContentItem, {borderBottomWidth: 1}]}>
-                    <MaterialCommunityIcons name="earth" size={20} style={styles.contentIcon} />
                     <Input
                       style={{ fontSize: 14, fontWeight: '700', color: '#4a4a4a'}}
                       placeholder="http://www.helloworld.com"
@@ -176,7 +252,6 @@ class Profile extends Component {
 
               <View style={styles.content}>
                 <Item style={[styles.basicContentItem, {borderBottomWidth: 0}]}>
-                    <Entypo name="info" size={20} style={styles.contentIcon} />
                     <Input
                       style={{ fontSize: 14, fontWeight: '700', color: '#4a4a4a'}}
                       placeholder="Here goes little bit about me. And so it goes on and on and on"
@@ -211,9 +286,9 @@ class Profile extends Component {
                     <Input
                       style={{ fontSize: 14, fontWeight: '700', color: '#4a4a4a'}}
                       placeholder="Phone"
-                      value={this.state.phone}
+                      value={this.state.phone?this.state.phone.toString():''}
                       placeholderTextColor="#949494"
-                      onChangeText={phone => this.setState({ phone })}
+                      onChangeText={phone => this.setState({phone: parseInt(phone)})}
                     />
 
                 </Item>
@@ -295,7 +370,34 @@ class Profile extends Component {
                       <Text style={{width: '100%', fontSize: 13, color: '#949494', fontWeight: '700'}}>Change the day mode to night mode which is a dark default pattern</Text>
                     </Left>
                     <Right style={{flex: 1}}>
-                      <Switch value={this.state.colorBlindMode} onValueChange={(value) => this.setState({colorBlindMode: value})} style={{borderWidth:0, marginTop: 15}} />
+                      <Switch
+                        value={this.state.colorBlindMode}
+                        activeText={''}
+                        inactiveText={''}
+                        fontSize={0}
+                        activeTextColor={'rgba(255, 255, 255, 1)'}
+                        inactiveTextColor={'rgba(255, 255, 255, 1)'}
+                        activeBackgroundColor={'#c34097'}
+                        inactiveBackgroundColor={'#222'}
+                        activeButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                        inactiveButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                        switchWidth={50}
+                        switchHeight={26}
+                        switchBorderRadius={0}
+                        switchBorderColor={'rgba(0, 0, 0, 1)'}
+                        switchBorderWidth={0}
+                        buttonWidth={20}
+                        buttonHeight={20}
+                        buttonBorderRadius={0}
+                        buttonBorderColor={'rgba(0, 0, 0, 1)'}
+                        buttonBorderWidth={0}
+                        animationTime={150}
+                        padding={true}
+                        style={{borderWidth:1}}
+                        onChangeValue={(value) => {
+                          this.setState({colorBlindMode: value})
+                        }}
+                      />
                     </Right>
                 </Item>
               </View>
@@ -309,47 +411,26 @@ class Profile extends Component {
               <View style={styles.content}>
                 <Item style={[styles.basicContentItem, {borderBottomWidth: 1}]}>
                     <Entypo name="info" size={20} style={styles.contentIcon} />
-
-                    <Input
-                      style={{ fontSize: 14, fontWeight: '700', color: '#4a4a4a'}}
-                      value={this.state.help}
-                      placeholder="Help"
-                      placeholderTextColor="#949494"
-                      onChangeText={help => this.setState({ help })}
-                    />
+                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#949494', lineHeight: 50}}>Help</Text>
                  </Item>
               </View>
               
               <View style={styles.content}>   
                 <Item style={[styles.basicContentItem, {borderBottomWidth: 1}]}>
                     <MaterialIcons name="lock" size={20} style={styles.contentIcon} />
-                    <Input
-                      style={{ fontSize: 14, fontWeight: '700', color: '#4a4a4a'}}
-                      placeholder="Privacy"
-                      value={this.state.privacy}
-                      placeholderTextColor="#949494"
-                      onChangeText={privacy => this.setState({ privacy })}
-                    />
-
+                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#949494', lineHeight: 50}}>Privacy</Text>
                 </Item>
               </View>
 
               <View style={styles.content}>
                 <Item style={[styles.basicContentItem, {borderBottomWidth: 0}]}>
                     <MaterialCommunityIcons name="file-multiple" size={20} style={styles.contentIcon} />
-                    <Input
-                      style={{ fontSize: 14, fontWeight: '700', color: '#4a4a4a'}}
-                      value={this.state.terms}
-                      placeholder="Terms of Service"
-                      placeholderTextColor="#949494"
-                      onChangeText={terms => this.setState({ terms })}
-                    />
-
+                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#949494', lineHeight: 50}}>Terms of Service</Text>
                 </Item>
               </View>
             </View>
           </View>
-          <Button style={[styles.normalButton, {backgroundColor: '#c34097'}]} onPress={() => Actions.pop()}>
+          <Button style={[styles.normalButton, {backgroundColor: '#c34097'}]} onPress={this.checkAndMove.bind(this)}>
               <Text style={{ fontWeight: '700', fontSize: 16, lineHeight: 20, color: '#fff' }}>Done</Text>
           </Button>
           <Button style={[styles.normalButton, {backgroundColor: '#4a4a4a'}]} onPress={() => Actions.pop()}>

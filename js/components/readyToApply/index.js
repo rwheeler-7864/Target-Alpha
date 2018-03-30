@@ -1,17 +1,21 @@
-import { Constants, Camera, FileSystem, Permissions } from 'expo';
+import { Constants, Camera, FileSystem, Permissions, FaceDetector } from 'expo';
 import React,{Component} from 'react';
 import { connect } from 'react-redux';
-import { Image, StyleSheet, TouchableOpacity, Slider, Vibration, Dimensions } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, Modal, Vibration, Dimensions, TouchableHighlight, TouchableWithoutFeedback, WebView  } from 'react-native';
 import { Feather, FontAwesome, MaterialCommunityIcons, Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { Container, View, Text, Button, Icon, Item, Input, Switch, Thumbnail, Header, Left, Right , Title} from 'native-base';
 import GalleryScreen from './galleryScreen';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import { openDrawer } from '../../actions/drawer';
 import Carousel from 'react-native-snap-carousel';
+import { Slider } from 'react-native-elements';
+import FooterTabs from '../footerTabs';
 const { width, height } = Dimensions.get('window');
 const SLIDE_WIDTH = Math.round(width  / 5 - 4);
 const ALL_ITEM_SLIDE_WIDTH = Math.round(width  / 5);
 const ITEM_WIDTH = SLIDE_WIDTH;
 const SLIDER_WIDTH = height;
+const ButtonWidth = width>375?35:25;
 const products = [
   {
     image: require('../../../images/Palette.jpg'),
@@ -44,34 +48,56 @@ const products = [
     rating: 5
   }
 ]
+
+const prebuiltItems = [
+  {
+    image: require('../../../images/prebuilt1.png'),
+    name: 'COVERGIRL* LashBlast Volume Mascara',
+    color: '#ff0000',
+    addName: 'prebuilt1'
+  },
+  {
+    image: require('../../../images/prebuilt1.png'),
+    name: 'Maybelline Sensational Powder Matte Lipstick',
+    color: '#ff2200',
+    addName: 'prebuilt1',
+  },
+  {
+    image: require('../../../images/prebuilt1.png'),
+    name: 'Pop-arazzi Special Effects Nail Polish, Never Too Rich 104',
+    color: '#ff0022',
+    addName: 'prebuilt1',
+  },
+  {
+    image: require('../../../images/prebuilt1.png'),
+    name: 'COVERGIRL* LashBlast Volume Mascara',
+    color: '#ff5500',
+    addName: 'prebuilt1',
+  }
+]
 const productItems = [
   {
-    image: require('../../../images/Covergirl.png'),
+    image: require('../../../images/eyeliner1.png'),
     name: 'COVERGIRL* LashBlast Volume Mascara',
     color: '#ff0000'
   },
   {
-    image: require('../../../images/Maybelline.png'),
+    image: require('../../../images/eyeliner1.png'),
     name: 'Maybelline Sensational Powder Matte Lipstick',
     color: '#ff2200',
   },
   {
-    image: require('../../../images/Pop-arazzi.png'),
+    image: require('../../../images/eyeliner1.png'),
     name: 'Pop-arazzi Special Effects Nail Polish, Never Too Rich 104',
     color: '#ff0022',
   },
   {
-    image: require('../../../images/Covergirl.png'),
+    image: require('../../../images/eyeliner1.png'),
     name: 'COVERGIRL* LashBlast Volume Mascara',
     color: '#ff5500',
-  },
-  {
-    image: require('../../../images/Maybelline.png'),
-    name: 'Maybelline Sensational Powder Matte Lipstick',
-    color: '#ff0055'
   }
 ]
-const landmarkSize = 2;
+const landmarkSize = 40;
 
 const flashModeOrder = {
   off: 'on',
@@ -91,6 +117,7 @@ const wbOrder = {
 
 class ReadyToApply extends Component {
   state = {
+    modalVisibleA: true,
     flash: 'off',
     zoom: 0,
     autoFocus: 'on',
@@ -105,6 +132,8 @@ class ReadyToApply extends Component {
     faces: [],
     permissionsGranted: false,
     selectedItem: 0,
+    brightness: 1,  
+    looktype: 'Unique'
   };
 
   async componentWillMount() {
@@ -225,31 +254,40 @@ class ReadyToApply extends Component {
   }
 
   renderLandmarksOfFace(face) {
-    const renderLandmark = position =>
+    const renderLandmarkEye = (position, probability, direct, rollAngle, yawAngle) =>
       position && (
         <View
           style={[
-            styles.landmark,
             {
-              left: position.x - landmarkSize / 2,
-              top: position.y - (landmarkSize + 130) / 2,
+              position:'absolute',
+              width: 80,
+              height: (probability+0.2) * 30,
+              left: position.x - 80 / 2,
+              top: position.y - ((probability+0.2) * 30 + 130) / 2,
             },
           ]}
+        >
+
+        <Image
+          style={[
+            {
+              width: '100%',
+              height: '100%',
+              resizeMode:'stretch',
+              transform: [
+                { rotateZ: `${rollAngle.toFixed(0)}deg` },
+                { rotateY: `${yawAngle.toFixed(0)}deg` }],
+              flex: 1
+            },
+          ]}
+          source={direct=='right'?require('../../../images/eyeliner1.png'):require('../../../images/eyeliner1_t.png')}
         />
+        </View>
       );
     return (
       <View key={`landmarks-${face.faceID}`}>
-        {renderLandmark(face.leftEyePosition)}
-        {renderLandmark(face.rightEyePosition)}
-        {renderLandmark(face.leftEarPosition)}
-        {renderLandmark(face.rightEarPosition)}
-        {renderLandmark(face.leftCheekPosition)}
-        {renderLandmark(face.rightCheekPosition)}
-        {renderLandmark(face.leftMouthPosition)}
-        {renderLandmark(face.mouthPosition)}
-        {renderLandmark(face.rightMouthPosition)}
-        {renderLandmark(face.noseBasePosition)}
-        {renderLandmark(face.bottomMouthPosition)}
+        {renderLandmarkEye(face.leftEyePosition, face.leftEyeOpenProbability, 'left', face.rollAngle, face.yawAngle)}
+        {renderLandmarkEye(face.rightEyePosition, face.rightEyeOpenProbability, 'right', face.rollAngle, face.yawAngle)}
       </View>
     );
   }
@@ -294,7 +332,7 @@ class ReadyToApply extends Component {
       return (
           <View key={index}  style={{marginTop: 0, width: (width/5), height:width/5 - 6}}>
             <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
-              <Item style={{backgroundColor: item.color, width: width/5 - 6, height: width/5 - 6}} ></Item>
+              <Item style={{borderBottomWidth: 0, backgroundColor: item.color, width: width/5 - 6, height: width/5 - 6}} ></Item>
             </View>
           </View>
       );
@@ -303,38 +341,104 @@ class ReadyToApply extends Component {
   render() {
     return (              
       <Container>
-        <Header style={{ backgroundColor: 'white', borderBottomWidth: 0, height: 60}}>
+        <Modal animationType="fade" transparent={true} visible={this.state.modalVisibleA} >
+          <TouchableHighlight   onPress={() => this.setState({modalVisibleA: false})}>
+            <View style={styles.modalView }>
+              <TouchableWithoutFeedback  onPress={() => {return false;}} >
+                <View style={styles.modalInnerView}>
+                  <Text style={{textAlign: 'center', color: '#4a4a4a', fontSize: 16, fontWeight: '500', lineHeight: 25}}>Do you want to start from the Unique Look or Pre-built Look?</Text>
+                  <View style={{flexDirection:'row', marginTop: 20}}>
+                    <Button onPress={() => {this.setState({modalVisibleA: false, looktype: 'Unique'});}}
+                      style={[styles.popupButton, {backgroundColor: '#c34097'}]}
+                    >
+                      <Text style={{ color:'#fff', textAlign: 'center', fontSize: 15, fontWeight: '500' }}>Unique</Text>
+                    </Button>
+                    <Button onPress={() => {this.setState({modalVisibleA: false, looktype: 'Pre-built'});}}
+                      style={[styles.popupButton, {backgroundColor: '#fff', borderWidth: 1, paddingLeft: 0, paddingRight: 0, borderColor: '#4a4a4a'}]}
+                    
+                    >
+                      <Text style={{ color:'#4a4a4a', textAlign: 'center', fontSize: 15, fontWeight: '500' }}>Pre-built</Text>
+                    </Button>
+                  </View>
+                  
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableHighlight>
+        </Modal>
+        <Header style={{ backgroundColor: 'black', borderBottomWidth: 0, height: 60}}>
           <Left >
+            <Button style={{backgroundColor: 'transparent'}} onPress={() => Actions.pop()} >
+              <Feather name="arrow-left" style={{ color: 'white', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
+            </Button>
           </Left>
+          <View style={styles.topHeaderText}>
+            <View style={{flexDirection:'row'}}>
+              <Entypo name="facebook-with-circle" style={{ color: 'white', fontSize: 26, marginLeft: 2, marginRight: 2, lineHeight: 32, fontWeight: '900' }} />
+              <Entypo name="twitter-with-circle" style={{ color: 'white', fontSize: 26, marginLeft: 2, marginRight: 2, lineHeight: 32, fontWeight: '900' }} />
+              <Entypo name="instagram-with-circle" style={{ color: 'white', fontSize: 26, marginLeft: 2, marginRight: 2, lineHeight: 32, fontWeight: '900' }} />
+            </View>
+          </View>
           <Right >
-            <Button style={{backgroundColor: 'white'}} onPress={this.props.openDrawer} >
-              <MaterialIcons name="menu" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
+            <Button style={{backgroundColor: 'transparent'}} onPress={() => Actions.shoppingList()} >
+              <MaterialIcons name="shopping-basket" style={{ color: 'white', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
             </Button>
           </Right>
         </Header>
-        <View style={styles.container}>
-          
-          <View style={{backgroundColor:'white', padding:10}}>
-            <Carousel 
-                autoplay={false}
-                renderItem={this._renderProductSlider.bind(this)}
-                sliderWidth={SLIDER_WIDTH}
-                itemWidth={ITEM_WIDTH}
-                activeSlideAlignment={'start'}
-                inactiveSlideScale={1}
-                loop={true}
-                data={products}
-                autoplayDelay={0}
-                autoplayInterval={1500}
-                inactiveSlideOpacity={1}
-            />
+        <View style={[styles.container]}>
+
+          {this.state.looktype=='initial' &&
+          <View style={{position:'absolute', right: 30,top:ButtonWidth, zIndex: 100}}>
+            <Button style={{backgroundColor:'red', borderRadius:0, height:40, justifyContent:'space-between', alignSelf:'flex-end' }}>
+              <MaterialCommunityIcons name="video-off" style={{ color: '#fff',  fontSize: 16, fontFamily: 'Roboto', lineHeight: 20, fontWeight: '900' }} />
+              <Text style={{fontSize: 16, color:'#fff', fontWeight:'900', fontFamily: 'Roboto'}}>End Session</Text>
+            </Button>
+            <Button style={{marginTop:15, borderRadius:0, width: ButtonWidth, paddingRight:0, paddingLeft:0, height: ButtonWidth, alignSelf:'center', alignItems:'center', alignSelf:'flex-end', justifyContent:'center', backgroundColor: 'rgba(0,0,0,0.7)'}}>
+              <MaterialCommunityIcons name="close-circle-outline" style={{ color: '#fff',  fontSize: 16, fontFamily: 'Roboto', lineHeight: 20, fontWeight: '900', justifyContent:'center', alignItems:'center', alignSelf:'center', textAlign:'center' }} />
+            </Button>
+            <Button style={{marginTop:3, borderRadius:0, width: ButtonWidth, paddingRight:0, paddingLeft:0, height: ButtonWidth, alignSelf:'center', alignItems:'center', alignSelf:'flex-end', justifyContent:'center', backgroundColor: 'rgba(0,0,0,0.7)'}}>
+              <MaterialIcons name="exit-to-app" style={{ color: '#fff',  fontSize: 16, fontFamily: 'Roboto', lineHeight: 20, fontWeight: '900', justifyContent:'center', alignItems:'center', alignSelf:'center', textAlign:'center' }} />
+            </Button>
+            <Button style={{marginTop:3, borderRadius:0, width: ButtonWidth, paddingRight:0, paddingLeft:0, height: ButtonWidth, alignSelf:'center', alignItems:'center', alignSelf:'flex-end', justifyContent:'center', backgroundColor: 'rgba(0,0,0,0.7)'}}>
+              <Entypo name="chevron-right" style={{ color: '#fff',  fontSize: 16, fontFamily: 'Roboto', lineHeight: 20, fontWeight: '900', justifyContent:'center', alignItems:'center', alignSelf:'center', textAlign:'center' }} />
+            </Button>
+            <Button style={{marginTop:3, borderRadius:0, width: ButtonWidth, paddingRight:0, paddingLeft:0, height: ButtonWidth, alignSelf:'center', alignItems:'center', alignSelf:'flex-end', justifyContent:'center', backgroundColor: 'rgba(0,0,0,0.7)'}}>
+              <FontAwesome name="columns" style={{ color: '#fff',  fontSize: 16, fontFamily: 'Roboto', lineHeight: 20, justifyContent:'center', alignItems:'center', alignSelf:'center', textAlign:'center', fontWeight: '900' }} />
+            </Button>
+            <Button style={{marginTop:3, borderRadius:0, width: ButtonWidth, paddingRight:0, paddingLeft:0, height: ButtonWidth, alignSelf:'center', alignItems:'center', alignSelf:'flex-end', justifyContent:'center', backgroundColor: '#fff'}}>
+              <Feather name="message-circle" style={{backgroundColor:'transparent', width:30, color: '#4a4a4a',  fontSize: 16, fontFamily: 'Roboto', justifyContent:'center', alignItems:'center', alignSelf:'center', textAlign:'center', fontWeight: '900' }} />
+            </Button>
+            <Button style={{marginTop:3, borderRadius:0, width: ButtonWidth, paddingRight:0, paddingLeft:0, height: ButtonWidth, alignSelf:'center', alignItems:'center', alignSelf:'flex-end', justifyContent:'center', backgroundColor: 'transparent'}}>
+               <Entypo name="chevron-thin-up" style={{width:30, color: '#fff',  fontSize: 16, fontFamily: 'Roboto', justifyContent:'center', alignItems:'center', alignSelf:'center', textAlign:'center', fontWeight: '900' }} />
+            </Button>
+                
           </View>
+          }
+          {this.state.looktype!='initial' &&
+          
+            <View style={{backgroundColor:'white', padding:10}}>
+              <Carousel 
+                  autoplay={false}
+                  renderItem={this._renderProductSlider}
+                  sliderWidth={SLIDER_WIDTH}
+                  itemWidth={ITEM_WIDTH}
+                  activeSlideAlignment={'start'}
+                  inactiveSlideScale={1}
+                  loop={true}
+                  data={products}
+                  autoplayDelay={0}
+                  autoplayInterval={1500}
+                  inactiveSlideOpacity={1}
+              />
+            </View>
+          }
           <Camera
             ref={ref => {
               this.camera = ref;
             }}
             style={{
               flex: 1,
+              flexDirection: 'column'
             }}
             type={this.state.type}
             flashMode={this.state.flash}
@@ -342,59 +446,174 @@ class ReadyToApply extends Component {
             zoom={this.state.zoom}
             whiteBalance={this.state.whiteBalance}
             ratio={this.state.ratio}
-            faceDetectionLandmarks={Camera?Camera.Constants.FaceDetection.Landmarks.all:''}
+            faceDetectionLandmarks={FaceDetector.Constants.Landmarks.all}
+            faceDetectionClassifications={FaceDetector.Constants.Classifications.all}
             onFacesDetected={this.onFacesDetected}
             onFaceDetectionError={this.onFaceDetectionError}
             focusDepth={this.state.depth}>
+            {this.state.looktype=='initial' &&
+              <WebView
+                style={{ width: width*16/45, height: width/5, position: 'absolute', top: ButtonWidth, left: 30, zIndex:1000 }}
+                javaScriptEnabled={true}
+                source={{uri: 'https://player.vimeo.com/video/145342552?autoplay=1&quality=1080p'}}
+              />
+            }
+            {this.state.looktype!='initial' &&
             <View
               style={{
-                flex: 0.5,
+                flex: 1,
                 backgroundColor: 'transparent',
-                flexDirection: 'row',
-                justifyContent: 'space-around',
                 paddingTop: Constants.statusBarHeight / 2,
               }}>
-              <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
-                <Text style={styles.flipText}> FLIP </Text>
+
+
+              <Slider
+                value={this.state.brightness}
+                orientation="vertical"
+                thumbTintColor="white"
+                minimumTrackTintColor ="white"
+                style={{width: width>375?240:180, position:'absolute', top: 150, right: width>375?-75:-45, zIndex: 30}}
+                onValueChange={(value) => {this.setState({brightness: value});Expo.Brightness.setBrightnessAsync(value);}} />
+              <TouchableOpacity style={[styles.flipButton, {position:'absolute', right: 20, bottom: 30, borderRadius: 50, width:50, height:50, backgroundColor:'rgba(0,0,0,0.7)'}]} onPress={this.toggleFacing.bind(this)}>
+                <MaterialIcons name="flip" style={{ color: 'white', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.flipButton} onPress={this.toggleFlash.bind(this)}>
-                <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.flipButton} onPress={this.toggleWB.bind(this)}>
-                <Text style={styles.flipText}> WB: {this.state.whiteBalance} </Text>
+              <TouchableOpacity style={[styles.flipButton, {position:'absolute', right: 20, bottom: 85, borderRadius: 50, width:50, height:50, backgroundColor:'rgba(0,0,0,0.7)'}]} onPress={()=> this.setState({looktype:'initial'})}>
+                <FontAwesome name="wechat" style={{ color: 'white', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </TouchableOpacity>
             </View>
-            <View
+            }
+            {this.state.looktype=='Unique' &&
+            <View style={{backgroundColor:'transparent', width:'100%', flexDirection: 'row'}}>
+                
+              <View key={101}  style={{marginLeft: width/6, marginTop: 0, width: (width/6), height:width/8-6}}>
+                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/8 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
+                    <Image source={productItems[0].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%' }}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View key={102}  style={{marginTop: 0, width: (width/6), height:width/8-6}}>
+                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/8 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
+                    <Image source={productItems[1].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '80%'}}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View key={103}  style={{marginTop: 0, width: (width/6), height:width/8-6}}>
+                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/8 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
+                    <Image source={productItems[2].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%'}}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View key={104}  style={{marginTop: 0, width: (width/6), height:width/8-8}}>
+                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/8 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
+                    <Image source={productItems[3].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%'}}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              </View>
+            }
+            {this.state.looktype=='Pre-built' &&
+            <View style={{backgroundColor:'transparent', width:'100%', flexDirection: 'row', zIndex: 20}}>
+            <View key={101}  style={{marginLeft: width/6, marginTop: 0, width: (width/6), height:width/6-6}}>
+                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/6 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
+                    <Image source={prebuiltItems[0].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%' }}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View key={102}  style={{marginTop: 0, width: (width/6), height:width/6-6}}>
+                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/6 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
+                    <Image source={prebuiltItems[1].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '80%'}}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View key={103}  style={{marginTop: 0, width: (width/6), height:width/6-6}}>
+                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/6 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
+                    <Image source={prebuiltItems[2].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%'}}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View key={104}  style={{marginTop: 0, width: (width/6), height:width/6-8}}>
+                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/6 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
+                    <Image source={prebuiltItems[3].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%'}}/>
+                  </TouchableOpacity>
+                </View>
+              </View></View>}
+            {this.state.looktype=='initial' && <View
               style={{
-                flex: 0.4,
+                paddingBottom: 0,
                 backgroundColor: 'transparent',
-                flexDirection: 'row',
-                alignSelf: 'flex-end',
-                marginBottom: -5,
+                flexDirection: 'column',
+                position:'absolute',
+                width: '100%',  
+                bottom: 60,
+                paddingLeft:30, 
+                paddingRight:30,
+                zIndex: 16,
               }}>
-              {this.state.autoFocus !== 'on' ? (
-                <Slider
-                  style={{ width: 150, marginTop: 15, marginRight: 15, alignSelf: 'flex-end' }}
-                  onValueChange={this.setFocusDepth.bind(this)}
-                  step={0.1}
-                />
-              ) : null}
+              <View style={{backgroundColor:'rgba(0,0,0,0.7)',width: '100%'}}>
+                <Entypo name="chevron-thin-down" style={{position: 'absolute', top: 5, right: 10, color: '#fff', fontSize: 20, lineHeight: 32, fontWeight: '900' }} />
+                <View style={{flexDirection:'row', height: 100, justifyContent:'center', padding: 10 }}>
+                  <View style={{ height: 100, justifyContent:'center', alignItems:'center', alignSelf:'center'}}>
+                    <Image style={{backgroundColor:'white', borderRadius:15, width: 30,height:30}} source={require('../../../images/profile-default.png')}/>
+                    <Text style={{color:'white', fontWeight: '700', fontSize: 12}}>Jane Smith</Text>
+                  </View>
+                  <View style={{height: 100, alignSelf:'center', alignItems:'center', justifyContent:'center'}}>
+                    <Text style={{color: '#949494', fontSize: 9, fontWeight: '700'}}>
+                      You are connected to
+                    </Text> 
+                  </View>
+                  <View style={{height: 100, alignItems:'center', alignSelf:'center', justifyContent:'center'}}>
+                    <Image style={{backgroundColor:'white', borderRadius:15, width: 30,height:30}} source={require('../../../images/prebuilt1.png')}/>
+                    <Text style={{color:'white', fontWeight: '700', fontSize: 12}}>Sarah Dias</Text>
+                    <Text style={{fontSize: 9, color: '#949494', fontWeight:'700'}}>Consultant</Text>
+                  </View>
+                </View>
+                <View style={{flexDirection:'row', alignItems:'center', paddingLeft: 20, paddingRight:20, justifyContent:'flex-start', marginBottom: 25}}>
+                  <Image style={{backgroundColor:'white', borderRadius:15, width: 30,height:30, marginRight: 10}} source={require('../../../images/prebuilt1.png')}/>
+                  <View>
+                    <View style={{flexDirection:'row'}}><Text style={{color:'white', fontWeight: '700', fontSize: 12}}>Sarah Dias</Text><Text style={{color:'#949494', fontWeight: '700', fontSize: 12}}> (consultant)</Text></View>
+                    <Text style={{fontSize: 10, color: '#949494', fontWeight:'700'}}>Hello, how can I help you today?</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={{backgroundColor:'rgba(0,0,0,0.7)', marginBottom: 20, paddingLeft: 20, paddingRight:20, borderTopWidth: 1, borderTopColor: '#fff'}}>
+                <View style={{flexDirection:'row', alignItems:'center', alignSelf:'center', justifyContent:'space-between'}}>
+                  <Input
+                    style={{ fontSize: 14, fontWeight: '700', color: '#4a4a4a'}}
+                    placeholder="Message..."
+                    placeholderTextColor="#949494"
+                  />
+                  <Item style={{backgroundColor:'#c34097', borderRadius: 12, alignItems:'center', alignSelf:'center', justifyContent:'center', width:24, height:24, borderBottomWidth:0}}>
+                    <MaterialIcons name="keyboard-arrow-right" style={{backgroundColor:'transparent', color: '#fff', alignItems:'center', alignSelf:'center', fontSize: 15, lineHeight: 24, fontWeight: '900' }} />
+                  </Item>
+                </View>
+              </View>
+
+              <View style={{flexDirection:'column', justifyContent:'center', marginTop: 10}}>
+                <View style={{flexDirection:'row'}}>
+                  <Button onPress={() => {this.setState({modalVisibleA: false, looktype: 'Pre-built'});}}
+                    style={[{height: width>375?30: 40, borderRadius:0, alignItems:'center', backgroundColor: '#fff', width: '45%', marginRight: '10%', borderWidth: 0, paddingLeft: 0, paddingRight: 0, borderColor: '#4a4a4a'}]}
+                  
+                  >
+                    <Text style={{ color:'#4a4a4a', width:'100%', textAlign: 'center', fontSize: 10, lineHeight:11, fontWeight: '500' }}>Select a Complete Look</Text>
+                  </Button>
+                  <Button onPress={() => {this.setState({modalVisibleA: false, looktype: 'Unique'});}}
+                    style={{height: width>375?30:40, borderRadius:0, alignItems:'center', backgroundColor: '#c34097', width: '45%'}}
+                  >
+                    <Text style={{ color:'#fff', width:'100%', textAlign: 'center', fontSize: 10, lineHeight:11, fontWeight: '500' }}>Create a Unique Look</Text>
+                  </Button>
+                </View>
+              </View>
             </View>
-            <View style={{backgroundColor:'transparent', width:'100%'}}>
-              <Carousel 
-                  autoplay={false}
-                  renderItem={this._renderItemSlider.bind(this)}
-                  sliderWidth={SLIDER_WIDTH}
-                  itemWidth={ALL_ITEM_SLIDE_WIDTH}
-                  activeSlideAlignment={'start'}
-                  inactiveSlideScale={1}
-                  loop={true}
-                  data={productItems}
-                  autoplayDelay={0}
-                  autoplayInterval={1500}
-                  inactiveSlideOpacity={1}
-              />
-            </View>
+          }
+          {this.state.looktype!='initial' &&
             <View
               style={{
                 flex: 0.1,
@@ -402,30 +621,36 @@ class ReadyToApply extends Component {
                 backgroundColor: 'transparent',
                 flexDirection: 'row',
                 alignSelf: 'flex-end',
+                zIndex: 16,
               }}>
               <TouchableOpacity
-                style={[styles.flipButton, styles.picButton, { flex: 1, alignSelf: 'flex-end' }]}
+                style={[styles.flipButton, styles.picButton, { flex: 3, alignSelf: 'flex-end', backgroundColor: '#222' }]}
                 >
                 <Text style={styles.flipText}> ALL </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.flipButton, styles.picButton, { flex: 1, alignSelf: 'flex-end' }]}
+                style={[styles.flipButton, styles.picButton, { flex: 2, alignSelf: 'flex-end', backgroundColor: '#000' }]}
                 onPress={this.takePicture.bind(this)}>
-                <Text style={styles.flipText}> SNAP </Text>
+                
+                <Feather name="camera" style={{ color: 'white', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.flipButton, styles.picButton, { flex: 1, alignSelf: 'flex-end' }]}>
+              <TouchableOpacity onPress={()=>Actions.compare({previous: require("../../../images/facial1.png"), after: require("../../../images/facial1_eyeliner1.png"), typePro:'facial'})}
+                style={[styles.flipButton, styles.picButton, { flex: 3, alignSelf: 'flex-end', backgroundColor: '#222' }]}>
                 <Text style={styles.flipText}> COMPARE </Text>
               </TouchableOpacity>
 
             </View>
+          }
+          {this.state.looktype!='initial' &&
             <View style={styles.facesContainer} pointerEvents="none">
-              {this.state.faces.map(this.renderFace)}
+              {this.state.looktype=='Unique' && this.state.faces.map(this.renderLandmarksOfFace)}
+              {this.state.looktype=='Pre-built' && <Image style={{zIndex:15, width:'100%', height:'100%', backgroundColor:'#fff', resizeMode: 'contain'}} source={require('../../../images/prebuilt1.png')}/>}
             </View>
-            <View style={styles.facesContainer} pointerEvents="none">
-              {this.state.faces.map(this.renderLandmarksOfFace)}
-            </View>
+          }
           </Camera>
+          {
+            this.state.looktype=='initial' && <FooterTabs/>
+          }
         </View>
       </Container>);
   }
@@ -445,14 +670,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   flipButton: {
-    flex: 0.3,
-    height: 40,
-    marginHorizontal: 2,
-    marginBottom: 10,
+    height: 50,
     marginTop: 20,
-    borderRadius: 8,
-    borderColor: 'white',
-    borderWidth: 1,
     padding: 5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -471,10 +690,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   picButton: {
-    backgroundColor: 'darkseagreen',
+    backgroundColor: 'black',
   },
   galleryButton: {
     backgroundColor: 'indianred',
+  },
+  topHeaderText: {
+    position: 'absolute',
+    top: 23,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   facesContainer: {
     position: 'absolute',
@@ -507,6 +733,30 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  modalView: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    width: '100%', 
+    height: '100%', 
+    alignItems: 'center'
+  },
+  popupButton: {
+    borderRadius: 0,
+    width: '44%',
+    marginLeft: '3%',
+    marginRight: '3%',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+  },
+  modalInnerView: {
+    position: 'absolute', 
+    bottom: 30, 
+    backgroundColor: '#fff', 
+    width: '90%', 
+    maxWidth: 400, 
+    padding: 30, 
+    borderWidth: 3, 
+    borderColor: '#c34097'
   },
 });
 

@@ -1,11 +1,12 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Image } from 'react-native';
-import { View, Text, Icon, List, ListItem, Content,Thumbnail } from 'native-base';
+import { Image, Modal } from 'react-native';
+import { View, Text, Icon, List, ListItem, Content,Thumbnail, Button } from 'native-base';
 
 import styles from './style';
 import { closeDrawer } from '../../actions/drawer';
+import { Feather, MaterialIcons, Entypo, Ionicons} from '@expo/vector-icons';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import PropTypes from 'prop-types';
 const cover = require('../../../images/cover-default.png');
@@ -24,21 +25,27 @@ class SideBar extends Component {
   static propTypes = {
     closeDrawer: PropTypes.func,
      }
-
+  componentDidMount(){
+    console.log('mount')
+  }
   render() {
     return (
-      <Content style={{ backgroundColor: '#fff' }} >
+
+      <View style={{ backgroundColor: '#fff' , flex:1}}>
         
-        <Content foregroundColor={'#000'} style={{...styles.list, paddingTop: 10 }}>
+        <Content foregroundColor={'#000'} style={{...styles.list, paddingTop: 20 }}>
           <ListItem button onPress={() => {Actions.profile(); this.props.closeDrawer();}} style={styles.links2} >
             <Text style={styles.linkText}>Profile</Text>
           </ListItem>
          
-          <ListItem button onPress={() => {Actions.settings(); this.props.closeDrawer();}} style={styles.links2} >
+          <ListItem button onPress={() => {Actions.account(); this.props.closeDrawer();}} style={styles.links2} >
+            <Text style={styles.linkText}>Account</Text>
+          </ListItem>
+          <ListItem button onPress={() => {Actions.beautyProfile(); this.props.closeDrawer();}} style={styles.links2} >
             <Text style={styles.linkText}>Settings</Text>
           </ListItem>
           </Content>
-        <ListItem button onPress={() => { Actions.login({ type: ActionConst.RESET }); this.props.closeDrawer(); }} iconLeft style={styles.links} >
+        <ListItem button onPress={() => { Actions.landing(); this.props.closeDrawer(); }} iconLeft style={styles.links} >
             <View style={styles.sidebarList} onPress={this.props.closeDrawer}>
               <View style={{ ...styles.sidebarIconView, ...styles.log }} >
                 <Icon active name="power" style={styles.sidebarIcon} />
@@ -47,7 +54,7 @@ class SideBar extends Component {
             </View>
           </ListItem>
 
-      </Content>
+      </View>
     );
   }
 }

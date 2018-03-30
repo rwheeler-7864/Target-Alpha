@@ -35,17 +35,16 @@ class BeautyProfile extends Component {
       percent += (this.state.hairType? 11:0);
       percent += (this.state.ethnicity? 11:0);
       percent += (this.state.hairStyling? 11:0);
-      console.log(Dimensions.get('window').width);
     // console.disableYellowBox = true;
       return (
-        <Container>
+        <Container style={{backgroundColor:'white'}}>
           <Header style={{backgroundColor: 'white', borderBottomWidth: 0 }}>
             <Left>
               <Button style={{backgroundColor: 'white'}} onPress={() => Actions.pop()} >
                 <Feather name="arrow-left" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </Button>
             </Left>
-            <Text style={styles.topHeaderText}>Beauty Profile</Text>
+            <Text style={[styles.topHeaderText, {top: (Platform.OS == 'android') ? 10: 30}]}>Beauty Profile</Text>
             <Right>
               <Button style={{backgroundColor: 'white'}} onPress={this.props.openDrawer} >
                 <MaterialIcons name="menu" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
@@ -166,7 +165,7 @@ class BeautyProfile extends Component {
                       <Ionicons name="ios-arrow-down" size={20} style={[{position: 'absolute', right: 10, top: 7, color: '#949494'}]}/>
                       <Picker
                         mode="dropdown"
-                        style={{ paddingLeft: 5,  height: 30 }}
+                        style={{ paddingLeft: 5,  height: 30, width: 200, backgroundColor:'transparent' }}
                         itemTextStyle = {{color: '#4a4a4a'}}
                         textStyle = {{color: '#949494', fontSize: 13, fontWeight: '700'}}
                         selectedValue={this.state.skinType}
@@ -323,7 +322,7 @@ class BeautyProfile extends Component {
                             <Ionicons name="ios-arrow-down" size={20} style={[{position: 'absolute', right: 10, top: 7, color: '#949494'}]}/>
                             <Picker
                               mode="dropdown"
-                              style={{ backgroundColor: 'transparent', paddingLeft: 5, height: 30 , paddingLeft: 0, marginLeft: 10}}
+                              style={{ backgroundColor: 'transparent', width: 200, paddingLeft: 5, height: 30 , marginLeft: 10}}
                               itemTextStyle = {{color: '#4a4a4a'}}
                               textStyle = {{color: '#949494', fontSize: 13, fontWeight: '700'}}
                               selectedValue={this.state.skinConcerns}
@@ -347,7 +346,7 @@ class BeautyProfile extends Component {
                             <Ionicons name="ios-arrow-down" size={20} style={[{position: 'absolute', right: 10, top: 7,  color: '#949494'}]}/>
                             <Picker
                               mode="dropdown"
-                              style={{  backgroundColor: 'transparent',  height: 30, paddingLeft: 5, marginLeft: 10}}
+                              style={{  backgroundColor: 'transparent', width: 200,  height: 30, paddingLeft: 5, marginLeft: 10}}
                               itemTextStyle = {{color: '#4a4a4a'}}
                               textStyle = {{color: '#949494', fontSize: 13,  fontWeight: '700'}}
                               selectedValue={this.state.hairType}
@@ -376,7 +375,7 @@ class BeautyProfile extends Component {
                               mode="dropdown"
                               style={{ backgroundColor: 'transparent', paddingLeft: 5,  height: 30 }}
                               itemTextStyle = {{color: '#4a4a4a'}}
-                              textStyle = {{color: '#949494', fontSize: 13, fontWeight: '700'}}
+                              textStyle = {{color: '#949494', width: 200, backgroundColor:'transparent', fontSize: 13, fontWeight: '700'}}
                               selectedValue={this.state.skinConcerns}
                               onValueChange={(key) => this.setState({ skinConcerns: key })}
                             >
@@ -398,9 +397,9 @@ class BeautyProfile extends Component {
                             <Ionicons name="ios-arrow-down" size={20} style={[{position: 'absolute', right: 10, top: 7,  color: '#949494'}]}/>
                             <Picker
                               mode="dropdown"
-                              style={{ backgroundColor: 'transparent', paddingLeft: 5,  height: 30 }}
+                              style={{ backgroundColor: 'transparent', width: 200, paddingLeft: 5,  height: 30 }}
                               itemTextStyle = {{color: '#4a4a4a'}}
-                              textStyle = {{color: '#949494', fontSize: 13,  fontWeight: '700'}}
+                              textStyle = {{color: '#949494', fontSize: 13, width:200, backgroundColor:'transparent', fontWeight: '700'}}
                               selectedValue={this.state.hairType}
                               onValueChange={(key) => this.setState({ hairType: key })}
                             >
@@ -423,7 +422,7 @@ class BeautyProfile extends Component {
                       <Ionicons name="ios-arrow-down" size={20} style={[{position: 'absolute', right: 10, top:10, color: '#949494'}]}/>
                       <Picker
                         mode="dropdown"
-                        style={{ backgroundColor: 'transparent', paddingLeft: 5,  height: 30 }}
+                        style={{ backgroundColor: 'transparent', width: 200, paddingLeft: 5,  height: 30 }}
                         itemTextStyle = {{color: '#4a4a4a'}}
                         textStyle = {{color: '#949494', fontSize: 13, fontWeight: '700'}}
                         selectedValue={this.state.ethnicity}
@@ -447,7 +446,7 @@ class BeautyProfile extends Component {
                       <Ionicons name="ios-arrow-down" size={20} style={[{position: 'absolute', right: 10, top: 7, color: '#949494'}]}/>
                       <Picker
                         mode="dropdown"
-                        style={{paddingLeft:5, alignSelf: 'stretch', height: 30 }}
+                        style={{paddingLeft:5, alignSelf: 'stretch', width: 200, backgroundColor:'transparent', height: 30 }}
                         itemTextStyle = {{color: '#4a4a4a'}}
                         textStyle = {{color: '#949494', fontSize: 13, fontWeight: '700'}}
                         selectedValue={this.state.hairStyling}

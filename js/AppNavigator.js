@@ -15,11 +15,16 @@ import ClaimReward from './components/claimReward/';
 import Account from './components/account/';
 import Cart from './components/cart/';
 import MyOrder from './components/myOrder/';
+import Compare from './components/compare';
+import Nail from './components/nail';
 import Shipping from './components/shipping/';
 import Community from './components/community';
+import Consultant from './components/consultant';
 import Settings from './components/settings/';
+import ReviewMyFavorite from './components/reviewMyFavorite';
 import VirtualMakeOver from './components/virtualMakeOver/';
 import ReadyToApply from './components/readyToApply';
+import ShoppingList from './components/shoppingList';
 import NotificationSettings from './components/notificationSettings/';
 import Track from './components/track/';
 import Profile from './components/profile/';
@@ -30,6 +35,7 @@ import Notification from './components/notification/';
 import Payment from './components/payment/';
 import SideBar from './components/sideBar';
 import PropTypes from 'prop-types';
+import LookDetails from './components/lookDetails';
 import { statusBarColor } from './themes/base-theme';
 
 const RouterWithRedux = connect()(Router);
@@ -68,7 +74,7 @@ class AppNavigator extends Component {
         ref={(ref) => { this._drawer = ref; }}
         type="overlay"
         tweenDuration={150}
-        content={<SideBar navigator={this._navigator} />}
+        content={<SideBar  navigator={this._navigator} />}
         tapToClose
         acceptPan={false}
         onClose={() => this.closeDrawer()}
@@ -101,25 +107,31 @@ class AppNavigator extends Component {
         <RouterWithRedux>
           <Scene key="root">
             <Scene
-              key="landing" component={Landing} hideNavBar 
-              initial={(Platform.OS == 'android') ? false : true}
+              key="landing" component={Landing} hideNavBar  
             />
             <Scene key="login" component={Login} hideNavBar/>
             <Scene
               key="register" component={Register} hideNavBar />
             <Scene key="cart" component={Cart} hideNavBar />
-            <Scene key="claimReward" component={ClaimReward} hideNavBar />
+            <Scene key="claimReward" component={ClaimReward} hideNavBar 
+              initial={(Platform.OS == 'android') ? false : true} />
             <Scene key="shipping" component={Shipping} />
-            <Scene key="virtualMakeOver" component={VirtualMakeOver}  hideNavBar/>
+            <Scene key="virtualMakeOver" component={VirtualMakeOver}  hideNavBar />
             <Scene key="home" component={Home} hideNavBar />
             <Scene key="community" component={Community} hideNavBar  />
+            <Scene key="compare" component={Compare} hideNavBar />
+            <Scene key="lookDetails" component={LookDetails} hideNavBar />
             <Scene key="product" component={Product} hideNavBar />
+            <Scene key="shoppingList" component={ShoppingList} hideNavBar />
+            <Scene key="consultant" component={Consultant} hideNavBar />
             <Scene key="myOrder" component={MyOrder} hideNavBar />
-            <Scene key="purchaseProfile" component={PurchaseProfile} hideNavBar />
+            <Scene key="purchaseProfile"  component={PurchaseProfile} hideNavBar />
             <Scene key="notificationSettings" component={NotificationSettings} hideNavBar />
             <Scene key="settings" component={Settings} hideNavBar />
+            <Scene key="nail" component={Nail} hideNavBar />
             <Scene key="readyToApply" component={ReadyToApply} hideNavBar />
             <Scene key="account" component={Account} hideNavBar />
+            <Scene key="reviewMyFavorite" component={ReviewMyFavorite} hideNavBar />
             <Scene key="profile" component={Profile} hideNavBar />
             <Scene key="beautyProfile" component={BeautyProfile} hideNavBar />
             <Scene key="beautyProfileNext" component={BeautyProfileNext} hideNavBar />

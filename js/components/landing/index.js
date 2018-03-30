@@ -12,21 +12,29 @@ import { MaterialIcons } from '@expo/vector-icons';
 const logo = require('../../../images/whitelogo.png');
 const data = [
   {
-    imageUrl: require("../../../images/BC-Makeup.jpeg"),
-    text: "Beautiful You is a total beauty experience for your face and hands",
+    imageUrl: require("../../../images/landing1.png"),
+    text: "Beautiful You is a total beauty experience for your face and hands.",
     index: 1
   },
-
   {
-    imageUrl: require("../../../images/BC-Makeup.jpeg"),
-    text: "Beautiful You is a total beauty experience for your face and hands",
+    imageUrl: require("../../../images/landing2.png"),
+    text: "Virtually try-on products and make-up for your eyes, cheeks, lips, hair and nails.",
     index: 2
   },
-
   {
-    imageUrl: require("../../../images/BC-Makeup.jpeg"),
-    text: "Beautiful You is a total beauty experience for your face and hands",
+    imageUrl: require("../../../images/landing3.png"),
+    text: "Easily find the best products to fit your beauty personality.  ",
     index: 3
+  },
+  {
+    imageUrl: require("../../../images/landing4.png"),
+    text: "Utilize the personal beauty consultant as a personal shopper ",
+    index: 4
+  },
+  {
+    imageUrl: require("../../../images/landing5.png"),
+    text: "Engage with the Beautiful You community for the latest trends, tips & tricks and how-to tutorials.",
+    index: 5
   }
 ];
 const { width, height } = Dimensions.get('window');
@@ -35,27 +43,18 @@ class Landing extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      size: { width: width, height: width * 0.8 },
+      size: { width: width, height: 240 },
     };
   }
   
   _onLayoutDidChange = (e) => {
     const layout = e.nativeEvent.layout;
-    this.setState({ size: { width: layout.width, height: layout.width * 0.8 } });
+    this.setState({ size: { width: layout.width, height: 240 } });
   }
 
   render() {
     return (
       <Container>
-        <Header style={{ backgroundColor: 'white', borderBottomWidth: 0 }}>
-          <Left >
-          </Left>
-          <Right >
-            <Button style={{backgroundColor: 'white'}} onPress={this.props.openDrawer} >
-              <MaterialIcons name="menu" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
-            </Button>
-          </Right>
-        </Header>
 
         
         <Content  style={{ backgroundColor: '#fff' }} >
@@ -89,24 +88,24 @@ class Landing extends Component {
             
 
 
-            <Button style={styles.registerButton}  onPress={() => Actions.login()}>
-                <Text style={{ fontWeight: '700', fontSize: 16, lineHeight: 20, color: '#fff' }}>Already have an account?</Text>
+            <Button style={[styles.normalButton, {borderWidth:0}]}  onPress={() => Actions.login()}>
+                <Text style={{ fontWeight: '700', fontSize: 16, lineHeight: 20, color: '#4a4a4a' }}>Already have an account?</Text>
             </Button>
             <Button style={styles.registerButton}  onPress={() => Actions.register()}>
-                <Text style={{ fontWeight: '700', fontSize: 16, lineHeight: 20, color: '#fff' }}>Create Account</Text>
+                <Text style={{ fontWeight: '700', fontSize: 14, lineHeight: 20, color: '#fff' }}>Create Account</Text>
             </Button>
             <Button style={styles.normalButton}>
-                <Text style={{ fontWeight: '700', fontSize: 16, lineHeight: 20, color: '#4a4a4a' }}>Login with Target</Text>
+                <Text style={{ fontWeight: '700', fontSize: 14, lineHeight: 20, color: '#4a4a4a' }}>Login with Target</Text>
             </Button>
             <Button style={styles.normalButton}>
                 <Icon name="logo-twitter" style={styles.twitterIcon} />
-                <Text style={{ fontWeight: '700', fontSize: 16, lineHeight: 20, color: '#4a4a4a' }}>
+                <Text style={{ fontWeight: '700', fontSize: 14, lineHeight: 20, color: '#4a4a4a' }}>
                   Continue with Twitter
                 </Text>
             </Button>
             <Button style={styles.normalButton}>
                 <Icon name="logo-facebook" style={styles.facebookIcon} />
-                <Text style={{ fontWeight: '700', fontSize: 16, lineHeight: 20, color: '#4a4a4a' }}> 
+                <Text style={{ fontWeight: '700', fontSize: 14, lineHeight: 20, color: '#4a4a4a' }}> 
                   Continue with Facebook
                 </Text>
             </Button>

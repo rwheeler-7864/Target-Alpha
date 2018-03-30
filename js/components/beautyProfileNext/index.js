@@ -28,14 +28,14 @@ class BeautyProfileNext extends Component {
   render() {
     // console.disableYellowBox = true;
       return (
-        <Container>
+        <Container  style={{backgroundColor:'white'}}>
           <Header style={{backgroundColor: 'white', borderBottomWidth: 0 }}>
             <Left>
               <Button style={{backgroundColor: 'white'}} onPress={() => Actions.pop()} >
                 <Feather name="arrow-left" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </Button>
             </Left>
-            <Text style={styles.topHeaderText}>Profile</Text>
+            <Text style={[styles.topHeaderText, {top: (Platform.OS == 'android') ? 10: 30}]}>Account</Text>
             <Right>
               <Button style={{backgroundColor: 'white'}} onPress={this.props.openDrawer} >
                 <MaterialIcons name="menu" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />

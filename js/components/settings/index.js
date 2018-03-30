@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Image, Platform, ScrollView, Modal, TouchableHighlight, TouchableWithoutFeedback, Switch } from 'react-native';
+import { Image, Platform, ScrollView, Modal, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
 import { Container, View, Text, Button,Content, Icon, Card, Item, Input, Thumbnail, Header, Left, Right, CardItem , Title} from 'native-base';
 import styles from './styles';
 import { Feather, FontAwesome, MaterialCommunityIcons, Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import { Font } from 'expo';
 import { openDrawer } from '../../actions/drawer';
 import FooterTabs from '../footerTabs';
+import Switch from 'react-native-customisable-switch';
 
 const profile = require('../../../images/profile-default.png');
 
@@ -29,7 +30,7 @@ class Settings extends Component {
                 <Feather name="arrow-left" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </Button>
             </Left>
-            <Text style={styles.topHeaderText}>Settings</Text>
+            <Text style={[styles.topHeaderText, {top: (Platform.OS == 'android') ? 10: 30}]}>Settings</Text>
             <Right>
               <Button style={{backgroundColor: 'white'}} onPress={this.props.openDrawer} >
                 <MaterialIcons name="menu" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
@@ -85,7 +86,34 @@ class Settings extends Component {
                   <View>
                   </View>
                   <View style={{flexDirection: 'row', justifyContent: 'flex-end', flex: 1}}>
-                    <Switch value={this.state.readyToPickUp} onValueChange={(value) => this.setState({readyToPickUp: value})} style={{borderWidth:0}} />
+                    <Switch
+                      value={this.state.readyToPickUp}
+                      activeText={''}
+                      inactiveText={''}
+                      fontSize={0}
+                      activeTextColor={'rgba(255, 255, 255, 1)'}
+                      inactiveTextColor={'rgba(255, 255, 255, 1)'}
+                      activeBackgroundColor={'#c34097'}
+                      inactiveBackgroundColor={'#222'}
+                      activeButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      inactiveButtonBackgroundColor={'rgba(255, 255, 255, 1)'}
+                      switchWidth={50}
+                      switchHeight={26}
+                      switchBorderRadius={0}
+                      switchBorderColor={'rgba(0, 0, 0, 1)'}
+                      switchBorderWidth={0}
+                      buttonWidth={20}
+                      buttonHeight={20}
+                      buttonBorderRadius={0}
+                      buttonBorderColor={'rgba(0, 0, 0, 1)'}
+                      buttonBorderWidth={0}
+                      animationTime={150}
+                      padding={true}
+                      style={{borderWidth:1}}
+                      onChangeValue={(value) => {
+                        this.setState({readyToPickUp: value})
+                      }}
+                    />
                   </View>
                  </Item>
               </View>
@@ -99,7 +127,7 @@ class Settings extends Component {
                         <Text style={[styles.leftEl, {marginBottom: 0, paddingTop: 0, paddingBottom: 0, fontSize: 14}]}>
                           Welcome {this.state.name}!
                         </Text>
-                        <Text style={{fontSize: 8, marginTop: 5, paddingTop: 0, color: '#4a4a4a', fontWeight: '700', textAlign: 'right'}}>Your beauty profile is {this.state.percent}% complete</Text>
+                        <Text style={{fontSize: 10, marginTop: 5, paddingTop: 0, color: '#4a4a4a', fontWeight: '700', textAlign: 'right'}}>Your beauty profile is {this.state.percent}% complete</Text>
                        
                         <View>
                           <Button style={{width: 200, borderRadius: 0, backgroundColor: '#c34097', marginTop: 10, height: 30, flexDirection: 'column', alignItems: 'center', paddingTop:5, paddingBottom: 5}}  onPress={() => Actions.profile()}>
