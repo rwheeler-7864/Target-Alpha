@@ -1,25 +1,78 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Image, Platform, ScrollView, Modal, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
-import { Container, View, Text, Button,Content, Icon, Card, Item, Input, Switch, Thumbnail, Header, Left, Right, CardItem , Title} from 'native-base';
+import { Image, Platform, ScrollView, Modal, TouchableHighlight, TouchableWithoutFeedback, Alert } from 'react-native';
+import { Container, View, Text, Button,Content, Icon, Card, Item, Input, Switch, Thumbnail, Header, Left, Right, CardItem , Title, Picker} from 'native-base';
 import styles from './styles';
 import { Feather, FontAwesome, MaterialCommunityIcons, Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import { Font } from 'expo';
 import { openDrawer } from '../../actions/drawer';
+const ItemPic = Picker.Item;
 
 const profile = require('../../../images/profile-default.png');
-
+const stateList = [
+  "AL",
+  "AK",
+  "AZ",
+  "AR",
+  "CA",
+  "CO",
+  "CT",
+  "DE",
+  "FL",
+  "GA",
+  "HI",
+  "ID",
+  "IL",
+  "IN",
+  "IA",
+  "KS",
+  "KY",
+  "LA",
+  "ME",
+  "MD",
+  "MA",
+  "MI",
+  "MN",
+  "MS",
+  "MO",
+  "MT",
+  "NE",
+  "NV",
+  "NH",
+  "NJ",
+  "NM",
+  "NY",
+  "NC",
+  "ND",
+  "OH",
+  "OK",
+  "OR",
+  "PA",
+  "RI",
+  "SC",
+  "SD",
+  "TN",
+  "TX",
+  "UT",
+  "VT",
+  "VA",
+  "WA",
+  "WV",
+  "WI",
+  "WY"
+  ];
 class Account extends Component {
   state = {
     name: 'Jane Smith',
     email: 'janesmith@gmail.com',
-    phone: '015 - 668 - 5558',
+    phone: '0156685558',
     accountOwner: 'Jane Smith',
     address: '125 Colony Road',
     city: 'New York',
-    state: 'NY, 10019',
+    state: 'NY',
+    zip: '10019',
     loyaltyCard: '123 - 98746 - 0987 - 087',
     favoriteProducts: [
       {number: "111-22-11", type: "Defined Gel", name: "Bobby Brown"},
@@ -27,6 +80,91 @@ class Account extends Component {
       {number: "333-22-45", type: "Ruby Woo", name: "Clinique"}
     ]
   };
+  onSave () {
+    if(this.state.name=='')
+    {
+      Alert.alert(
+         "Please input name"
+      )
+      console.log("Please input name");
+      return false;
+    }
+    if(this.state.address=='')
+    {
+      Alert.alert(
+         "Please input address"
+      )
+      console.log("Please input address");
+      return false;
+    }
+    if(this.state.city=='')
+    {
+      Alert.alert(
+         "Please input city"
+      )
+      console.log("Please input city");
+      return false;
+    }
+    if(this.state.zip=='')
+    {
+      Alert.alert(
+         "Please input zip code"
+      )
+      console.log("Please input zip code");
+      return false;
+    }
+    if(this.state.zip.length!=5)
+    {
+      Alert.alert(
+         "Zip Code must be 5 numbers"
+      )
+      console.log("Zip Code must be 5 numbers");
+      return false;
+    }
+    if(this.state.phone=='')
+    {
+      Alert.alert(
+         "Please input phone number"
+      )
+      console.log("Please input phone number");
+      return false;
+    }
+    if(this.state.phone.length!=10)
+    {
+      console.log(this.state.phone.length)
+      Alert.alert(
+         "Phone numbers must be 10 numbers"
+      )
+      console.log("Phone numbers must be 10 numbers");
+      return false;
+    }
+    if(this.state.email=='')
+    {
+      Alert.alert(
+         "Please input email"
+      )
+      console.log("Please input email");
+      return false;
+    }
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+    if(reg.test(this.state.email.toLowerCase()) === false)
+    {
+      Alert.alert(
+         "Incorrect email format"
+      )
+      console.log("Incorrect email format");
+      return false;
+    }
+    if(this.state.loyaltyCard=='')
+    {
+      Alert.alert(
+         "Please input Card"
+      )
+      console.log("Please input Card");
+      return false;
+    }
+    Actions.home();
+  }
   render() {
     // console.disableYellowBox = true;
       return (
@@ -56,7 +194,7 @@ class Account extends Component {
             </Text>
           </Item>
           <Item style={[styles.beautyContentItem, {borderBottomWidth: 0, marginBottom: 20, flexDirection: 'row', justifyContent:'space-between'}]}>
-            <Button onPress={() => Actions.home()} style={{width: "30%", backgroundColor: "#c34097", borderRadius: 0, marginRight: "5%", justifyContent: "center", alignSelf: "center"}}>
+            <Button onPress={this.onSave.bind(this)} style={{width: "30%", backgroundColor: "#c34097", borderRadius: 0, marginRight: "5%", justifyContent: "center", alignSelf: "center"}}>
               <Text style={{fontSize: 13, color: "white", textAlign: "center", fontWeight: "700"}}>
                 Save
               </Text>
@@ -93,6 +231,7 @@ class Account extends Component {
                       placeholder="Account Owner"
                       defaultValue={this.state.name}
                       placeholderTextColor="#949494"
+                      onChangeText={name => this.setState({ name })}
                     />
                   </View>
                  </Item>
@@ -108,6 +247,7 @@ class Account extends Component {
                       placeholder="Address"
                       defaultValue={this.state.address}
                       placeholderTextColor="#949494"
+                      onChangeText={address => this.setState({ address })}
                     />
                   </View>
                  </Item>
@@ -123,21 +263,50 @@ class Account extends Component {
                       placeholder="City"
                       defaultValue={this.state.city}
                       placeholderTextColor="#949494"
+                      onChangeText={city => this.setState({ city })}
                     />
+                  </View>
+                 </Item>
+                 <Item style={[styles.beautyContentItem, {borderBottomWidth: 1, flexDirection: 'row', justifyContent:'space-between'}]}>
+                  <View style={{flex: 4}}>
+                    <Text style={styles.leftEl}>
+                      State:
+                    </Text>
+                  </View>
+                  <View style={[styles.beautyProfileRightEl, {flexDirection: 'row', justifyContent: 'flex-end', flex:1, alignItems:'center', borderWidth: 1, borderColor: '#949494', marginTop: 15, marginBottom: 15}]}>
+                    <View style={{flexDirection: 'row', justifyContent:'flex-start', flex: 1}}>
+                      <Ionicons name="ios-arrow-down" size={20} style={[{position: 'absolute', right: 10, top: 7, color: '#949494'}]}/>
+                      <Picker
+                        mode="dropdown"
+                        style={{ paddingLeft: 5,  height: 30, width: 200, backgroundColor:'transparent' }}
+                        itemTextStyle = {{color: '#4a4a4a'}}
+                        textStyle = {{color: '#949494', fontSize: 13, fontWeight: '700'}}
+                        selectedValue={this.state.state}
+                        onValueChange={(key) => this.setState({ state: key })}
+                      >
+                      {
+                        stateList.map((stat, key)=>
+                          <ItemPic key={key} label={stat} value={stat} />
+                        )
+                      }
+
+                      </Picker>
+                    </View>
                   </View>
                  </Item>
                  <Item style={[styles.beautyContentItem, {borderBottomWidth: 1, flexDirection: 'row', justifyContent:'space-between'}]}>
                   <View>
                     <Text style={styles.leftEl}>
-                      State / Zip:
+                      Zip:
                     </Text>
                   </View>
                   <View>
                     <Input
                       style={styles.rightEl}
-                      placeholder="State / Zip"
-                      defaultValue={this.state.state}
+                      placeholder="Zip"
+                      defaultValue={this.state.zip}
                       placeholderTextColor="#949494"
+                      onChangeText={zip => this.setState({ zip })}
                     />
                   </View>
                  </Item>
@@ -153,6 +322,7 @@ class Account extends Component {
                       placeholder="Phone"
                       defaultValue={this.state.phone}
                       placeholderTextColor="#949494"
+                      onChangeText={phone => this.setState({ phone })}
                     />
                   </View>
                  </Item>
@@ -168,6 +338,7 @@ class Account extends Component {
                       placeholder="Email"
                       defaultValue={this.state.email}
                       placeholderTextColor="#949494"
+                      onChangeText={email => this.setState({ email })}
                     />
                   </View>
                  </Item>
@@ -183,6 +354,7 @@ class Account extends Component {
                       placeholder="Loyalty Card"
                       defaultValue={this.state.loyaltyCard}
                       placeholderTextColor="#949494"
+                      onChangeText={loyaltyCard => this.setState({ loyaltyCard })}
                     />
                   </View>
                  </Item>

@@ -77,24 +77,33 @@ const prebuiltItems = [
 ]
 const productItems = [
   {
-    image: require('../../../images/eyeliner1.png'),
-    name: 'COVERGIRL* LashBlast Volume Mascara',
-    color: '#ff0000'
-  },
-  {
-    image: require('../../../images/eyeliner1.png'),
+    image: require('../../../images/eye3.png'),
+    type: 'eye',
+    loadImgLeftUp: require('../../../images/eye3_left_up.png'),
+    loadImgRightUp: require('../../../images/eye3_right_up.png'),
+    loadImgLeftDown: require('../../../images/eye3_left_down.png'),
+    loadImgRightDown: require('../../../images/eye3_right_down.png'),
     name: 'Maybelline Sensational Powder Matte Lipstick',
     color: '#ff2200',
+    pSelNumber: 0,
   },
   {
-    image: require('../../../images/eyeliner1.png'),
+    image: require('../../../images/lip1.png'),
+    type: 'lip',
+    loadImgDown: require('../../../images/lip1_down.png'),
+    loadImgUp: require('../../../images/lip1_up.png'),
     name: 'Pop-arazzi Special Effects Nail Polish, Never Too Rich 104',
     color: '#ff0022',
+    pSelNumber: 1,
   },
   {
-    image: require('../../../images/eyeliner1.png'),
+    image: require('../../../images/makeup1.png'),
+    type: 'makeup',
+    loadImgLeft: require('../../../images/makeup1_left.png'),
+    loadImgRight: require('../../../images/makeup1_right.png'),
     name: 'COVERGIRL* LashBlast Volume Mascara',
     color: '#ff5500',
+    pSelNumber: 2,
   }
 ]
 const landmarkSize = 40;
@@ -133,7 +142,8 @@ class ReadyToApply extends Component {
     permissionsGranted: false,
     selectedItem: 0,
     brightness: 1,  
-    looktype: 'Unique'
+    looktype: 'Unique',
+    pSelNumber: -1,
   };
 
   async componentWillMount() {
@@ -254,40 +264,191 @@ class ReadyToApply extends Component {
   }
 
   renderLandmarksOfFace(face) {
-    const renderLandmarkEye = (position, probability, direct, rollAngle, yawAngle) =>
-      position && (
-        <View
-          style={[
-            {
-              position:'absolute',
-              width: 80,
-              height: (probability+0.2) * 30,
-              left: position.x - 80 / 2,
-              top: position.y - ((probability+0.2) * 30 + 130) / 2,
-            },
-          ]}
-        >
+    console.log(face)
+    const renderLandmarkEye = (positionLeft, positionRight, probabilityLeft, probabilityRight, direct, rollAngle, yawAngle) =>
+      positionLeft && positionRight && (
+        <View>
+          <View
+            style={[
+              {
+                position:'absolute',
+                width: 60,
+                height: 20,
+                left: positionLeft.x - 60 / 2,
+                top: direct=='up'?positionLeft.y - 82:positionLeft.y - 60,
+              },
+            ]}
+          >
 
-        <Image
-          style={[
-            {
-              width: '100%',
-              height: '100%',
-              resizeMode:'stretch',
-              transform: [
-                { rotateZ: `${rollAngle.toFixed(0)}deg` },
-                { rotateY: `${yawAngle.toFixed(0)}deg` }],
-              flex: 1
-            },
-          ]}
-          source={direct=='right'?require('../../../images/eyeliner1.png'):require('../../../images/eyeliner1_t.png')}
-        />
+          <Image
+            style={[
+              {
+                width: '100%',
+                height: '100%',
+                resizeMode:'stretch',
+                transform: [
+                  { rotateZ: `${rollAngle.toFixed(0)}deg` },
+                  { rotateY: `${yawAngle.toFixed(0)}deg` }],
+                flex: 1
+              },
+            ]}
+            source={direct=='up'?productItems[0].loadImgLeftUp:productItems[0].loadImgLeftDown}
+          />
+          </View>
+          <View
+            style={[
+              {
+                position:'absolute',
+                width: 60,
+                height: 20,
+                left: positionRight.x - 60 / 2,
+                top: direct=='up'?positionRight.y - 82:positionRight.y - 60,
+              },
+            ]}
+          >
+
+          <Image
+            style={[
+              {
+                width: '100%',
+                height: '100%',
+                resizeMode:'stretch',
+                transform: [
+                  { rotateZ: `${rollAngle.toFixed(0)}deg` },
+                  { rotateY: `${yawAngle.toFixed(0)}deg` }],
+                flex: 1
+              },
+            ]}
+            source={direct=='up'?productItems[0].loadImgRightUp:productItems[0].loadImgRightDown}
+          />
+          </View>
+        </View>
+      );
+
+    const renderLandmarkLip = (leftMouthPosition, mouthPosition, rightMouthPosition, bottomMouthPosition, rollAngle, yawAngle) =>
+      leftMouthPosition && mouthPosition && rightMouthPosition && bottomMouthPosition &&(
+        <View>
+          <View
+            style={[
+              {
+                position:'absolute',
+                width: rightMouthPosition.x - leftMouthPosition.x,
+                height: bottomMouthPosition.y - mouthPosition.y,
+                left: leftMouthPosition.x,
+                top: mouthPosition.y - 70,
+              },
+            ]}
+          >
+
+          <Image
+            style={[
+              {
+                width: '100%',
+                height: '100%',
+                resizeMode:'stretch',
+                transform: [
+                  { rotateZ: `${rollAngle.toFixed(0)}deg` },
+                  { rotateY: `${yawAngle.toFixed(0)}deg` }],
+                flex: 1
+              },
+            ]}
+            source={productItems[1].loadImgDown}
+          />
+          </View>
+          <View
+            style={[
+              {
+                position:'absolute',
+                width: rightMouthPosition.x - leftMouthPosition.x,
+                height: bottomMouthPosition.y - mouthPosition.y,
+                left: leftMouthPosition.x,
+                top: 2 * mouthPosition.y - bottomMouthPosition.y - 70,
+              },
+            ]}
+          >
+
+          <Image
+            style={[
+              {
+                width: '100%',
+                height: '100%',
+                resizeMode:'stretch',
+                transform: [
+                  { rotateZ: `${rollAngle.toFixed(0)}deg` },
+                  { rotateY: `${yawAngle.toFixed(0)}deg` }],
+                flex: 1
+              },
+            ]}
+            source={productItems[1].loadImgUp}
+          />
+          </View>
+        </View>
+      );
+      const renderLandmarkCheek = (leftCheekPosition, rightCheekPosition, leftWidth, leftHeight, rightWidth, rightHeight, rollAngle, yawAngle) =>
+      leftCheekPosition && rightCheekPosition && (
+        <View>
+          <View
+            style={[
+              {
+                position:'absolute',
+                width: leftWidth*1.6,
+                height: leftHeight*1.6,
+                left: leftCheekPosition.x - leftWidth * 0.8,
+                top: leftCheekPosition.y - leftHeight * 0.8 - 70,
+              },
+            ]}
+          >
+
+          <Image
+            style={[
+              {
+                width: '100%',
+                height: '100%',
+                resizeMode:'stretch',
+                transform: [
+                  { rotateZ: `${rollAngle.toFixed(0)}deg` },
+                  { rotateY: `${yawAngle.toFixed(0)}deg` }],
+                flex: 1
+              },
+            ]}
+            source={productItems[2].loadImgLeft}
+          />
+          </View>
+          <View
+            style={[
+              {
+                position:'absolute',
+                width: rightWidth*1.6,
+                height: rightHeight*1.6,
+                left: rightCheekPosition.x - rightWidth * 0.8,
+                top: rightCheekPosition.y - rightHeight * 0.8 - 70,
+              },
+            ]}
+          >
+
+          <Image
+            style={[
+              {
+                width: '100%',
+                height: '100%',
+                resizeMode:'stretch',
+                transform: [
+                  { rotateZ: `${rollAngle.toFixed(0)}deg` },
+                  { rotateY: `${yawAngle.toFixed(0)}deg` }],
+                flex: 1
+              },
+            ]}
+            source={productItems[2].loadImgRight}
+          />
+          </View>
         </View>
       );
     return (
       <View key={`landmarks-${face.faceID}`}>
-        {renderLandmarkEye(face.leftEyePosition, face.leftEyeOpenProbability, 'left', face.rollAngle, face.yawAngle)}
-        {renderLandmarkEye(face.rightEyePosition, face.rightEyeOpenProbability, 'right', face.rollAngle, face.yawAngle)}
+        {this.state.pSelNumber == 0 && renderLandmarkEye(face.leftEyePosition, face.rightEyePosition, face.leftEyeOpenProbability, face.rightEyeOpenProbability, 'up', face.rollAngle, face.yawAngle)}
+        {this.state.pSelNumber == 0 && renderLandmarkEye(face.leftEyePosition, face.rightEyePosition, face.leftEyeOpenProbability, face.rightEyeOpenProbability, 'down', face.rollAngle, face.yawAngle)}
+        {this.state.pSelNumber == 1 && renderLandmarkLip(face.leftMouthPosition, face.mouthPosition, face.rightMouthPosition, face.bottomMouthPosition, face.rollAngle, face.yawAngle)}
+        {this.state.pSelNumber == 2 && renderLandmarkCheek(face.leftCheekPosition, face.rightCheekPosition, Math.abs(face.leftEarPosition.x - face.leftMouthPosition.x),  Math.abs(face.leftEarPosition.y - face.leftMouthPosition.y),  Math.abs(face.rightEarPosition.x - face.rightMouthPosition.x),  Math.abs(face.rightEarPosition.y - face.rightMouthPosition.y), face.rollAngle, face.yawAngle)}
       </View>
     );
   }
@@ -303,7 +464,7 @@ class ReadyToApply extends Component {
   renderLandmarks() {
     return (
       <View style={styles.facesContainer} pointerEvents="none">
-        {this.state.faces.map(this.renderLandmarksOfFace)}
+        {this.state.faces.map(this.renderLandmarksOfFace.bind(this))}
       </View>
     );
   }
@@ -472,79 +633,44 @@ class ReadyToApply extends Component {
                 orientation="vertical"
                 thumbTintColor="white"
                 minimumTrackTintColor ="white"
-                style={{width: width>375?240:180, position:'absolute', top: 150, right: width>375?-75:-45, zIndex: 30}}
+                style={{width: width>375?240:180, position:'absolute', top: width>=375?150:100, right: width>375?-75:-45, zIndex: 30}}
                 onValueChange={(value) => {this.setState({brightness: value});Expo.Brightness.setBrightnessAsync(value);}} />
-              <TouchableOpacity style={[styles.flipButton, {position:'absolute', right: 20, bottom: 30, borderRadius: 50, width:50, height:50, backgroundColor:'rgba(0,0,0,0.7)'}]} onPress={this.toggleFacing.bind(this)}>
+              <TouchableOpacity style={[styles.flipButton, {position:'absolute', right: 20, bottom: 80, borderRadius: 50, width:50, height:50, backgroundColor:'rgba(0,0,0,0.7)'}]} onPress={this.toggleFacing.bind(this)}>
                 <MaterialIcons name="flip" style={{ color: 'white', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.flipButton, {position:'absolute', right: 20, bottom: 85, borderRadius: 50, width:50, height:50, backgroundColor:'rgba(0,0,0,0.7)'}]} onPress={()=> this.setState({looktype:'initial'})}>
+              <TouchableOpacity style={[styles.flipButton, {position:'absolute', left: 20, bottom: 80, borderRadius: 50, width:50, height:50, backgroundColor:'rgba(0,0,0,0.7)'}]} onPress={()=>this.setState({pSelNumber: -1})}>
+                <Feather name="refresh-cw" style={{ color: 'white', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.flipButton, {position:'absolute', right: 20, bottom: 135, borderRadius: 50, width:50, height:50, backgroundColor:'rgba(0,0,0,0.7)'}]} onPress={()=> this.setState({looktype:'initial'})}>
                 <FontAwesome name="wechat" style={{ color: 'white', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               </TouchableOpacity>
             </View>
             }
-            {this.state.looktype=='Unique' &&
-            <View style={{backgroundColor:'transparent', width:'100%', flexDirection: 'row'}}>
-                
-              <View key={101}  style={{marginLeft: width/6, marginTop: 0, width: (width/6), height:width/8-6}}>
-                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
-                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/8 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
-                    <Image source={productItems[0].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%' }}/>
-                  </TouchableOpacity>
+
+            <View style={{backgroundColor:'transparent', width:'100%', flexDirection: 'row', position:'absolute', zIndex: 20,
+                 bottom: 60, left: 0, paddingLeft: this.state.looktype=='Pre-built'?width/6: width/4}}>
+            {
+              this.state.looktype=='Unique' && productItems.map((item, index) => ( 
+                <View key={index}  style={{marginTop: 0, width: (width/6), height:width/6-6}}>
+                  <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
+                    <TouchableOpacity onPress={()=> this.setState({pSelNumber: item.pSelNumber})} style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/6 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
+                      <Image source={item.image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%' }}/>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-              <View key={102}  style={{marginTop: 0, width: (width/6), height:width/8-6}}>
-                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
-                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/8 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
-                    <Image source={productItems[1].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '80%'}}/>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View key={103}  style={{marginTop: 0, width: (width/6), height:width/8-6}}>
-                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
-                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/8 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
-                    <Image source={productItems[2].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%'}}/>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View key={104}  style={{marginTop: 0, width: (width/6), height:width/8-8}}>
-                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
-                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/8 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
-                    <Image source={productItems[3].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%'}}/>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              </View>
+              ))
             }
-            {this.state.looktype=='Pre-built' &&
-            <View style={{backgroundColor:'transparent', width:'100%', flexDirection: 'row', zIndex: 20}}>
-            <View key={101}  style={{marginLeft: width/6, marginTop: 0, width: (width/6), height:width/6-6}}>
+            {this.state.looktype=='Pre-built' && prebuiltItems.map((item, index) => ( 
+              <View key={index}  style={{ marginTop: 0, width: (width/6), height:width/6-6}}>
                 <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
                   <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/6 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
-                    <Image source={prebuiltItems[0].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%' }}/>
+                    <Image source={item.image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%' }}/>
                   </TouchableOpacity>
                 </View>
               </View>
-              <View key={102}  style={{marginTop: 0, width: (width/6), height:width/6-6}}>
-                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
-                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/6 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
-                    <Image source={prebuiltItems[1].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '80%'}}/>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View key={103}  style={{marginTop: 0, width: (width/6), height:width/6-6}}>
-                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
-                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/6 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
-                    <Image source={prebuiltItems[2].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%'}}/>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View key={104}  style={{marginTop: 0, width: (width/6), height:width/6-8}}>
-                <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
-                  <TouchableOpacity style={{borderColor: '#949494', backgroundColor: '#fff', alignItems:'center', justifyContent:'center', width: width/6 - 6, height: width/6 - 6, marginBottom: 5, borderWidth:1, borderRadius: 5}} >
-                    <Image source={prebuiltItems[3].image} style={{resizeMode:'contain', width: '60%' , alignSelf:'center', height: '100%'}}/>
-                  </TouchableOpacity>
-                </View>
-              </View></View>}
+
+              ))}
+            </View>
             {this.state.looktype=='initial' && <View
               style={{
                 paddingBottom: 0,
@@ -583,7 +709,7 @@ class ReadyToApply extends Component {
                   </View>
                 </View>
               </View>
-              <View style={{backgroundColor:'rgba(0,0,0,0.7)', marginBottom: 20, paddingLeft: 20, paddingRight:20, borderTopWidth: 1, borderTopColor: '#fff'}}>
+              <View style={{backgroundColor:'rgba(0,0,0,0.7)', marginBottom: 10, paddingLeft: 20, paddingRight:20, borderTopWidth: 1, borderTopColor: '#fff'}}>
                 <View style={{flexDirection:'row', alignItems:'center', alignSelf:'center', justifyContent:'space-between'}}>
                   <Input
                     style={{ fontSize: 14, fontWeight: '700', color: '#4a4a4a'}}
@@ -643,7 +769,7 @@ class ReadyToApply extends Component {
           }
           {this.state.looktype!='initial' &&
             <View style={styles.facesContainer} pointerEvents="none">
-              {this.state.looktype=='Unique' && this.state.faces.map(this.renderLandmarksOfFace)}
+              {this.state.looktype=='Unique' && this.state.faces.map(this.renderLandmarksOfFace.bind(this))}
               {this.state.looktype=='Pre-built' && <Image style={{zIndex:15, width:'100%', height:'100%', backgroundColor:'#fff', resizeMode: 'contain'}} source={require('../../../images/prebuilt1.png')}/>}
             </View>
           }

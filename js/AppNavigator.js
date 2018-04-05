@@ -108,13 +108,13 @@ class AppNavigator extends Component {
           <Scene key="root">
             <Scene
               key="landing" component={Landing} hideNavBar  
+              initial={(Platform.OS == 'android') ? false : true}
             />
             <Scene key="login" component={Login} hideNavBar/>
             <Scene
               key="register" component={Register} hideNavBar />
             <Scene key="cart" component={Cart} hideNavBar />
-            <Scene key="claimReward" component={ClaimReward} hideNavBar 
-              initial={(Platform.OS == 'android') ? false : true} />
+            <Scene key="claimReward" component={ClaimReward} hideNavBar />
             <Scene key="shipping" component={Shipping} />
             <Scene key="virtualMakeOver" component={VirtualMakeOver}  hideNavBar />
             <Scene key="home" component={Home} hideNavBar />
@@ -129,7 +129,7 @@ class AppNavigator extends Component {
             <Scene key="notificationSettings" component={NotificationSettings} hideNavBar />
             <Scene key="settings" component={Settings} hideNavBar />
             <Scene key="nail" component={Nail} hideNavBar />
-            <Scene key="readyToApply" component={ReadyToApply} hideNavBar />
+            <Scene key="readyToApply" component={ReadyToApply} hideNavBar  />
             <Scene key="account" component={Account} hideNavBar />
             <Scene key="reviewMyFavorite" component={ReviewMyFavorite} hideNavBar />
             <Scene key="profile" component={Profile} hideNavBar />

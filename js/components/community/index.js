@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, ScrollView } from 'react-native';
+import { Image, ScrollView, WebView, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import autobind from 'class-autobind';
 import { Container, View, Text, Button, Icon, Item, Input, Switch, Thumbnail, Header, Left, Right , Title} from 'native-base';
@@ -12,6 +12,7 @@ import { openDrawer } from '../../actions/drawer';
 import PropTypes from 'prop-types';
 import FooterTabs from '../footerTabs';
 import Swiper from 'react-native-swiper';
+const { width, height } = Dimensions.get('window');
 
 const logo = require('../../../images/whitelogo.png');
 const slideimages = [
@@ -121,12 +122,16 @@ class Community extends Component {  // eslint-disable-line
               }
             </Swiper>
           </View>
-          <View style={{height: 110, borderWidth: 5, borderColor: "#b01e53"}}>
-            <Swiper size={100} autoplay nextButton={<FontAwesome name="angle-double-right" style={{ color: '#fff', fontSize: 20}} />} prevButton={<FontAwesome name="angle-double-left" style={{ color: '#fff', fontSize: 20}} />} activeDotColor="white" showsButtons={true} dotColor="transparent" dotStyle={{borderColor:'white', borderWidth: 1, width:6, height:6}} activeDotStyle={{width:6, height:6}}  paginationStyle={{bottom: 5}}>
+          <View style={{height: 110, borderWidth: 5, borderColor: "#b01e53", backgroundColor:'black'}}>
+            <Swiper size={100} nextButton={<FontAwesome name="angle-double-right" style={{ color: '#fff', fontSize: 20}} />} prevButton={<FontAwesome name="angle-double-left" style={{ color: '#fff', fontSize: 20}} />} activeDotColor="white" showsButtons={true} dotColor="transparent" dotStyle={{borderColor:'white', borderWidth: 1, width:6, height:6}} activeDotStyle={{width:6, height:6}}  paginationStyle={{bottom: 5}}>
               {
                 slideimages3.map((item, index) => (
-                  <View key={index} style={styles.slide}>
-                    <Image resizeMode='stretch' style={styles.slideImage} source={item.source}/>
+                  <View key={index} style={[styles.slide, {backgroundColor:'black'}]}>
+                    <WebView
+                      style={{ width: width, backgroundColor: 'transparent'}}
+                      javaScriptEnabled={true}
+                      source={{uri: 'https://player.vimeo.com/video/145342552?autoplay=0'}}
+                    />
                   </View>
                 ))
               }
