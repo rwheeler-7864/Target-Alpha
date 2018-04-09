@@ -9,7 +9,7 @@ import { openDrawer } from '../../actions/drawer';
 import Carousel from 'react-native-looped-carousel-improved';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const logo = require('../../../images/whitelogo.png');
+const logo = require('../../../images/logo.gif');
 const data = [
   {
     imageUrl: require("../../../images/landing1.png"),
@@ -77,7 +77,7 @@ class Landing extends Component {
                 data.map(item => (
                   <View key={item.index} style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Image source={item.imageUrl} style={[this.state.size, {flex: 1, resizeMode: 'cover'}]}></Image>
-                    <Text style={{position: 'absolute', lineHeight: 25, fontSize: 18, color: 'white', padding: 25, backgroundColor:'transparent', textAlign: 'center', fontWeight:'500' }}>{item.text}</Text>
+                    <Text style={{position: 'absolute', lineHeight: 25, fontSize: 18, color: '#000000', padding: 25, backgroundColor:'transparent', textAlign: 'center', fontWeight:'500' }}>{item.text}</Text>
                   </View>
                 ))
               }

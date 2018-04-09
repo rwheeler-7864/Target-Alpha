@@ -119,7 +119,7 @@ class Home extends Component {  // eslint-disable-line
               </Item>
             </Left>
             <View style={{marginTop: 25}}>
-              <Text style={{fontSize:16, color: '#B51E56', letterSpacing: 0.5, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
+              <Text style={{fontSize:18, color: '#B51E56', letterSpacing: 0.5, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
                 Hi, Jessica!
               </Text>
               <Text style={{fontSize:10,  marginTop: 5,fontFamily:'700', color: '#000', fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
@@ -135,7 +135,7 @@ class Home extends Component {  // eslint-disable-line
           <Modal  backdrop={false}  position={"top"} ref={"modal"}>
             <View style={{alignItems: 'center', alignSelf:'center', justifyContent: 'center', flex: 1}}>
               <TouchableOpacity  onPress={()=> Actions.home()} >
-                <Image style={{width:200, height:200}} source={require('../../../images/appIconWhite.png')}/>
+                <Image style={{width:200, height:200}} source={require('../../../images/logo.gif')}/>
               </TouchableOpacity>
               <Entypo onPress={()=> this.refs.modal.close()} name="chevron-thin-down" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               <Button style={{height: 60, width: 200, paddingLeft:0,paddingRight:0,  borderRadius: 0, backgroundColor: '#c34097', marginTop: 20}} onPress={()=>Actions.virtualMakeOver()}><Text style={{width: '100%', textAlign:'center', fontSize: 13, lineHeight:14}}>Go To Facial Make Up</Text></Button>

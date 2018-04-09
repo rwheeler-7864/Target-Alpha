@@ -82,25 +82,25 @@ const prebuiltItems = [
 ]
 const productItems = [
   {
-    image: require('../../../images/eyeliner1.png'),
+    image: require('../../../images/eye3.png'),
     name: 'COVERGIRL* LashBlast Volume Mascara',
     color: '#ff0000',
     addName: 'eyeliner1'
   },
   {
-    image: require('../../../images/eyeliner1.png'),
+    image: require('../../../images/eye3.png'),
     name: 'Maybelline Sensational Powder Matte Lipstick',
     color: '#ff2200',
     addName: 'eyeliner1',
   },
   {
-    image: require('../../../images/eyeliner1.png'),
+    image: require('../../../images/eye3.png'),
     name: 'Pop-arazzi Special Effects Nail Polish, Never Too Rich 104',
     color: '#ff0022',
     addName: 'eyeliner1',
   },
   {
-    image: require('../../../images/eyeliner1.png'),
+    image: require('../../../images/eye3.png'),
     name: 'COVERGIRL* LashBlast Volume Mascara',
     color: '#ff5500',
     addName: 'eyeliner1',
@@ -119,6 +119,7 @@ class VirtualMakeOver extends Component {
     looktype: 'Unique'
   };
   async pickCamera() {
+    this.setState({sampleMode: false})
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
 
@@ -130,6 +131,7 @@ class VirtualMakeOver extends Component {
     }
   }
   async pickImage() {
+    this.setState({sampleMode: false})
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [16, 9],
@@ -201,41 +203,70 @@ class VirtualMakeOver extends Component {
   onBannerAdError = (event) => console.log('Ad error :(', event.nativeEvent);
 
   renderLandmarksOfFace(face, index) {
-    const renderLandmarkEye = (position, probability, direct, rollAngle, yawAngle) =>
-      position && (
-        <View
-          style={[
-            {
-              position:'absolute',
-              width: 60,
-              height: (probability+0.2) * 20,
-              left: direct=='left'? position.x * width/this.state.images.width - 60 / 2 - 5:position.x * width/this.state.images.width - 60 / 2 + 5,
-              top: position.y * width/this.state.images.width - ((probability+0.2) * 20  + 60) / 2 + (height - this.state.images.height*width/this.state.images.width)/2 - 4,
-            
-            },
-          ]}
-        >
+    const renderLandmarkEye = (positionLeft, positionRight, probabilityLeft, probabilityRight, direct, rollAngle, yawAngle) =>
+      positionLeft && positionRight && (
+        <View>
+          <View
+            style={[
+              {
+                position:'absolute',
+                width: 50,
+                height: 15,
+                left: positionLeft.x * width/this.state.images.width - 50 / 2,
+                top: direct=='up'?positionLeft.y * width/this.state.images.width - 82 + 37 + (height - this.state.images.height*width/this.state.images.width)/2 :positionLeft.y * width/this.state.images.width - 60 + 28 + (height - this.state.images.height*width/this.state.images.width)/2 ,
+              },
+            ]}
+          >
 
-        <Image
-          style={[
-            {
-              width: '100%',
-              height: '100%',
-              resizeMode:'stretch',
-              transform: [
-                { rotateZ: `${rollAngle.toFixed(0)}deg` },
-                { rotateY: `${yawAngle.toFixed(0)}deg` }],
-              flex: 1
-            },
-          ]}
-          source={direct=='right'?require('../../../images/eyeliner1.png'):require('../../../images/eyeliner1_t.png')}
-        />
+          <Image
+            style={[
+              {
+                width: '100%',
+                height: '100%',
+                resizeMode:'stretch',
+                transform: [
+                  { rotateZ: `${rollAngle.toFixed(0)}deg` },
+                  { rotateY: `${yawAngle.toFixed(0)}deg` }],
+                flex: 1
+              },
+            ]}
+            source={direct=='up'?require('../../../images/eye3_left_up.png'):require('../../../images/eye3_left_down.png')}
+          />
+          </View>
+          <View
+            style={[
+              {
+                position:'absolute',
+                width: 50,
+                height: 15,
+                left: positionRight.x * width/this.state.images.width - 50 / 2,
+                top: direct=='up'?positionRight.y * width/this.state.images.width - 82 + 37 + (height - this.state.images.height*width/this.state.images.width)/2 :positionRight.y * width/this.state.images.width - 60 + 28 + (height - this.state.images.height*width/this.state.images.width)/2 ,
+              },
+            ]}
+          >
+
+          <Image
+            style={[
+              {
+                width: '100%',
+                height: '100%',
+                resizeMode:'stretch',
+                transform: [
+                  { rotateZ: `${rollAngle.toFixed(0)}deg` },
+                  { rotateY: `${yawAngle.toFixed(0)}deg` }],
+                flex: 1
+              },
+            ]}
+            source={direct=='up'?require('../../../images/eye3_right_up.png'):require('../../../images/eye3_right_down.png')}
+          />
+          </View>
         </View>
       );
+    
     return (
       <View key={`landmarks-${index}`}  style={{width:'100%', height:'100%', flex:1, position:'relative'}}>
-        {renderLandmarkEye(face.leftEyePosition, face.leftEyeOpenProbability, 'left', face.rollAngle, face.yawAngle)}
-        {renderLandmarkEye(face.rightEyePosition, face.rightEyeOpenProbability, 'right', face.rollAngle, face.yawAngle)}
+        { !this.state.sampleMode && renderLandmarkEye(face.leftEyePosition, face.rightEyePosition, face.leftEyeOpenProbability, face.rightEyeOpenProbability, 'up', face.rollAngle, face.yawAngle)}
+        {  !this.state.sampleMode && renderLandmarkEye(face.leftEyePosition, face.rightEyePosition, face.leftEyeOpenProbability, face.rightEyeOpenProbability, 'down', face.rollAngle, face.yawAngle)}
       </View>
     );
   }

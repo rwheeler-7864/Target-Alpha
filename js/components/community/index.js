@@ -48,6 +48,17 @@ const slideimages3 = [
     source: require('../../../images/Tutorial.jpg')
   }
 ]
+const slideimages4 = [
+  {
+    source: require('../../../images/OfferBanner.jpg')
+  },
+  {
+    source: require('../../../images/OfferBanner.jpg')
+  },
+  {
+    source: require('../../../images/OfferBanner.jpg')
+  }
+]
 class Community extends Component {  // eslint-disable-line
 
   static propTypes = {
@@ -78,7 +89,7 @@ class Community extends Component {  // eslint-disable-line
               </Item>
             </Left>
             <View style={{marginTop: 25}}>
-              <Text style={{fontSize:16, color: '#B51E56', letterSpacing: 0.5, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
+              <Text style={{fontSize:18, color: '#B51E56', letterSpacing: 0.5, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
                 Hi, Jessica!
               </Text>
               <Text style={{fontSize:10,  marginTop: 5,fontFamily:'700', color: '#000', fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto'}}>
@@ -92,8 +103,19 @@ class Community extends Component {  // eslint-disable-line
             </Right>
           </Header>
           <ScrollView>
-          <View style={{height: 105, borderWidth: 5, marginTop: 50, borderColor: "#b01e53", borderBottomWidth: 0}}>
-            <Swiper size={100} autoplay nextButton={<FontAwesome name="angle-double-right" style={{ color: '#fff', fontSize: 20}} />} prevButton={<FontAwesome name="angle-double-left" style={{ color: '#fff', fontSize: 20}} />} activeDotColor="white" showsButtons={true} dotColor="transparent" dotStyle={{borderColor:'white', borderWidth: 1, width:6, height:6}} activeDotStyle={{width:6, height:6}}  paginationStyle={{bottom: 5}}>
+          <View style={{height: 44}}>
+            <Swiper size={44} horizontal={false} autoplay activeDotColor="white" dotColor="#ccc" dotStyle={{borderColor:'white', borderWidth: 1}}>
+              {
+                slideimages4.map((item, index) => (
+                  <View key={index} style={styles.slide}>
+                    <Image resizeMode='stretch' style={styles.slideImage} source={item.source}/>
+                  </View>
+                ))
+              }
+            </Swiper>
+          </View>
+          <View style={{height: 105, borderWidth: 5, borderColor: "#b01e53", borderBottomWidth: 0}}>
+            <Swiper size={100}  nextButton={<FontAwesome name="angle-double-right" style={{ color: '#fff', fontSize: 20}} />} prevButton={<FontAwesome name="angle-double-left" style={{ color: '#fff', fontSize: 20}} />} activeDotColor="white" showsButtons={true} dotColor="transparent" dotStyle={{borderColor:'white', borderWidth: 1, width:6, height:6}} activeDotStyle={{width:6, height:6}}  paginationStyle={{bottom: 5}}>
               {
                 slideimages.map((item, index) => (
                   <View key={index} style={styles.slide}>
@@ -104,7 +126,7 @@ class Community extends Component {  // eslint-disable-line
             </Swiper>
           </View>
           <View style={{height: 105, borderWidth: 5, borderColor: "#b01e53", borderBottomWidth: 0}}>
-            <Swiper size={100} autoplay nextButton={<FontAwesome name="angle-double-right" style={{ color: '#949494', fontSize: 20}} />} prevButton={<FontAwesome name="angle-double-left" style={{ color: '#4a4a4a', fontSize: 20}} />} activeDotColor="#4a4a4a" showsButtons={true} dotColor="transparent" dotStyle={{borderColor:'#4a4a4a', borderWidth: 1, width:6, height:6}} activeDotStyle={{width:6, height:6}}  paginationStyle={{bottom: 5}}>
+            <Swiper size={100}  nextButton={<FontAwesome name="angle-double-right" style={{ color: '#949494', fontSize: 20}} />} prevButton={<FontAwesome name="angle-double-left" style={{ color: '#4a4a4a', fontSize: 20}} />} activeDotColor="#4a4a4a" showsButtons={true} dotColor="transparent" dotStyle={{borderColor:'#4a4a4a', borderWidth: 1, width:6, height:6}} activeDotStyle={{width:6, height:6}}  paginationStyle={{bottom: 5}}>
               {
                 slideimages2.map((item, index) => (
                   <View key={index} style={styles.slide}>
@@ -123,15 +145,21 @@ class Community extends Component {  // eslint-disable-line
             </Swiper>
           </View>
           <View style={{height: 110, borderWidth: 5, borderColor: "#b01e53", backgroundColor:'black'}}>
+            
+            
             <Swiper size={100} nextButton={<FontAwesome name="angle-double-right" style={{ color: '#fff', fontSize: 20}} />} prevButton={<FontAwesome name="angle-double-left" style={{ color: '#fff', fontSize: 20}} />} activeDotColor="white" showsButtons={true} dotColor="transparent" dotStyle={{borderColor:'white', borderWidth: 1, width:6, height:6}} activeDotStyle={{width:6, height:6}}  paginationStyle={{bottom: 5}}>
               {
                 slideimages3.map((item, index) => (
-                  <View key={index} style={[styles.slide, {backgroundColor:'black'}]}>
-                    <WebView
-                      style={{ width: width, backgroundColor: 'transparent'}}
-                      javaScriptEnabled={true}
-                      source={{uri: 'https://player.vimeo.com/video/145342552?autoplay=0'}}
-                    />
+                  <View key={index} >
+                    <View style={[styles.slide, {opacity:0, width: width, height:100, position:'absolute', top:0, left:0, zIndex:1000, backgroundColor:'black'}]}>
+                      <WebView
+                        style={{ width: width,  backgroundColor: 'transparent'}}
+                        javaScriptEnabled={true}
+                        source={{uri: 'https://player.vimeo.com/video/145342552?autoplay=0'}}
+                      />  
+                    </View>
+                       <Image source={require('../../../images/Tutorial.jpg')} style={{height: 100, zIndex: 10,  width:'100%'}} />
+               
                   </View>
                 ))
               }
@@ -150,7 +178,7 @@ class Community extends Component {  // eslint-disable-line
             </View>
             <View style={{borderWidth: 2.5, borderTopWidth: 0, borderColor: "#b01e53", flexDirection: 'row', flex: 1}}>
 
-              <Image source={require('../../../images/StoreEvents.jpg')} style={{height: 100, flex: 1, opacity: 0.5}} />
+              <Image source={require('../../../images/Target-store-image-homepage-todaysoffers.jpg')} style={{height: 100, flex: 1, opacity: 0.5}} />
               <View style={{position: 'absolute', bottom: 10, left: 0, alignItems: 'center', flexDirection:'column', width: '100%',backgroundColor: 'transparent'}}>
                 <Text style={{color: '#000', fontSize: 20, lineHeight: 20, fontFamily: this.state.fontLoaded?'JosefinSans':'Roboto',backgroundColor: 'transparent'}}>
                   store

@@ -42,7 +42,7 @@ class SideBar extends Component {
             <Text style={styles.linkText}>Account</Text>
           </ListItem>
           <ListItem button onPress={() => {Actions.beautyProfile(); this.props.closeDrawer();}} style={styles.links2} >
-            <Text style={styles.linkText}>Settings</Text>
+            <Text style={styles.linkText}>Beauty Profile</Text>
           </ListItem>
           </Content>
         <ListItem button onPress={() => { Actions.landing(); this.props.closeDrawer(); }} iconLeft style={styles.links} >

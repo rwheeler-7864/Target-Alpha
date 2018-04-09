@@ -232,12 +232,12 @@ class ShoppingList extends Component {
 
             </View>
             <Item style={[styles.beautyContentItem, {width:'100%', borderBottomWidth: 0, marginTop: 5, flexDirection: 'row', justifyContent:'space-between', marginTop:70, marginBottom:80}]}>
-              <Button onPress={()=>Actions.virtualMakeOver()} style={{width: "45%", flexDirection:'column', backgroundColor: "#4a4a4a", borderRadius: 0, marginRight: "10%", justifyContent: "center", alignSelf: "center"}}>
+              <Button onPress={()=>Actions.virtualMakeOver()} style={{height: 55, width: "45%", flexDirection:'column', backgroundColor: "#4a4a4a", borderRadius: 0, marginRight: "10%", justifyContent: "center", alignSelf: "center"}}>
                 <Text style={{fontSize: 12, color: "white", textAlign: "center", lineHeight: 12, fontWeight: "700", width:'100%'}}>
                   Back To Shopping
                 </Text>
               </Button>
-              <Button onPress={()=>Actions.shoppingList()} style={{width: "45%", flexDirection:'column', backgroundColor: "#c34097", borderWidth: 0, borderRadius: 0, borderColor: "#949494", justifyContent: "center", alignSelf: "center"}}>
+              <Button onPress={()=>Actions.shoppingList()} style={{height: 55, width: "45%", flexDirection:'column', backgroundColor: "#c34097", borderWidth: 0, borderRadius: 0, borderColor: "#949494", justifyContent: "center", alignSelf: "center"}}>
                 <Text style={{width: '100%', fontWeight: "700", fontSize: 12, lineHeight: 12, textAlign: "center", color: "#fff"}}>
                   Proceed To Shopping List
                 </Text>

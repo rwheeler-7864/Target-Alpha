@@ -275,7 +275,7 @@ class ReadyToApply extends Component {
                 width: 60,
                 height: 20,
                 left: positionLeft.x - 60 / 2,
-                top: direct=='up'?positionLeft.y - 82:positionLeft.y - 60,
+                top: direct=='up'?positionLeft.y - 80:positionLeft.y - 62,
               },
             ]}
           >
@@ -302,7 +302,7 @@ class ReadyToApply extends Component {
                 width: 60,
                 height: 20,
                 left: positionRight.x - 60 / 2,
-                top: direct=='up'?positionRight.y - 82:positionRight.y - 60,
+                top: direct=='up'?positionRight.y - 80:positionRight.y - 62,
               },
             ]}
           >

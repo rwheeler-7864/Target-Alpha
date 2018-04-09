@@ -8,7 +8,7 @@ import styles from './styles';
 import { openDrawer } from '../../actions/drawer';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 
-const logo = require('../../../images/whitelogo.png');
+const logo = require('../../../images/logo.gif');
 
 class Login extends Component {
 
@@ -32,7 +32,7 @@ class Login extends Component {
         return false;
       }
       else{
-        if(((this.state.email.toLowerCase())=="test@gmail.com") && (this.state.password=="testtest")){
+        if(((this.state.email.toLowerCase())=="test@gmail.com") && (this.state.password=="test123")){
           Actions.home();
         }
         else{
