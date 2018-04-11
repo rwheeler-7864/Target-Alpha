@@ -9,7 +9,7 @@ import { openDrawer } from '../../actions/drawer';
 import Carousel from 'react-native-looped-carousel-improved';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const logo = require('../../../images/logo.gif');
+const logo = require('../../../images/whitelogo.png');
 const data = [
   {
     imageUrl: require("../../../images/landing1.png"),

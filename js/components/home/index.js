@@ -135,7 +135,7 @@ class Home extends Component {  // eslint-disable-line
           <Modal  backdrop={false}  position={"top"} ref={"modal"}>
             <View style={{alignItems: 'center', alignSelf:'center', justifyContent: 'center', flex: 1}}>
               <TouchableOpacity  onPress={()=> Actions.home()} >
-                <Image style={{width:200, height:200}} source={require('../../../images/logo.gif')}/>
+                <Image style={{width:200, height:200}} source={require('../../../images/whitelogo.png')}/>
               </TouchableOpacity>
               <Entypo onPress={()=> this.refs.modal.close()} name="chevron-thin-down" style={{ color: '#c34097', fontSize: 30, lineHeight: 32, fontWeight: '900' }} />
               <Button style={{height: 60, width: 200, paddingLeft:0,paddingRight:0,  borderRadius: 0, backgroundColor: '#c34097', marginTop: 20}} onPress={()=>Actions.virtualMakeOver()}><Text style={{width: '100%', textAlign:'center', fontSize: 13, lineHeight:14}}>Go To Facial Make Up</Text></Button>

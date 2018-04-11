@@ -83,27 +83,32 @@ const prebuiltItems = [
 const productItems = [
   {
     image: require('../../../images/eye3.png'),
-    name: 'COVERGIRL* LashBlast Volume Mascara',
-    color: '#ff0000',
-    addName: 'eyeliner1'
-  },
-  {
-    image: require('../../../images/eye3.png'),
+    type: 'eye',
+    loadImgLeftUp: require('../../../images/eye3_left_up.png'),
+    loadImgRightUp: require('../../../images/eye3_right_up.png'),
+    loadImgLeftDown: require('../../../images/eye3_left_down.png'),
+    loadImgRightDown: require('../../../images/eye3_right_down.png'),
     name: 'Maybelline Sensational Powder Matte Lipstick',
     color: '#ff2200',
-    addName: 'eyeliner1',
+    pSelNumber: 0,
   },
   {
-    image: require('../../../images/eye3.png'),
+    image: require('../../../images/lip1.png'),
+    type: 'lip',
+    loadImgDown: require('../../../images/lip1_down.png'),
+    loadImgUp: require('../../../images/lip1_up.png'),
     name: 'Pop-arazzi Special Effects Nail Polish, Never Too Rich 104',
     color: '#ff0022',
-    addName: 'eyeliner1',
+    pSelNumber: 1,
   },
   {
-    image: require('../../../images/eye3.png'),
+    image: require('../../../images/makeup1.png'),
+    type: 'makeup',
+    loadImgLeft: require('../../../images/makeup1_left.png'),
+    loadImgRight: require('../../../images/makeup1_right.png'),
     name: 'COVERGIRL* LashBlast Volume Mascara',
     color: '#ff5500',
-    addName: 'eyeliner1',
+    pSelNumber: 2,
   }
 ]
 class VirtualMakeOver extends Component {
@@ -116,7 +121,8 @@ class VirtualMakeOver extends Component {
     sampleMode: false,
     sampleNumber: 1,
     modalVisible: true,
-    looktype: 'Unique'
+    looktype: 'Unique',
+    pSelNumber: -1
   };
   async pickCamera() {
     this.setState({sampleMode: false})
@@ -175,9 +181,9 @@ class VirtualMakeOver extends Component {
         madeup=require('../../../images/facial4_eyeliner1.png');
       } 
       return (
-          <View key={index}  style={{marginTop: 0, width: (width/6), height:width/8 - 6}}>
+          <View key={index}  style={{marginTop: 0, width: (width/5), height:width/5 - 6}}>
             <View style={{flexDirection: 'column', flex: 1, padding: 0, alignSelf:'center', alignItems:'center'}}>
-              <TouchableOpacity style={{borderColor: '#949494', alignItems:'center', justifyContent:'center', backgroundColor: '#fff', width: width/6 - 6, height: width/8 - 6, borderWidth:1, borderRadius: 5}} onPress={()=>{console.log(this.state.sampleMode);this.state.sampleMode? this.setState({selectedPhotoUri: madeup}):this.setState({seletedItem: item.Image})}}>
+              <TouchableOpacity style={{borderColor: '#949494', alignItems:'center', justifyContent:'center', backgroundColor: '#fff', width: width/5 - 6, height: width/5 - 6, borderWidth:1, borderRadius: 5}} onPress={()=>{console.log(this.state.sampleMode);this.state.sampleMode? this.setState({selectedPhotoUri: madeup}):this.setState({seletedItem: item.Image})}}>
                 <Image source={item.image} style={{resizeMode:'contain', width: '60%' , height: '100%', alignSelf:'center'}}/>
               </TouchableOpacity>
             </View>
@@ -470,7 +476,7 @@ class VirtualMakeOver extends Component {
               
             </View>
      
-            <View style={{backgroundColor:'transparent', width:'66%',marginLeft:'16%', zIndex: 20, marginBottom: 5}}>
+            <View style={{backgroundColor:'transparent', width:'60%',marginLeft:'20%', zIndex: 20, marginBottom: 5}}>
               <Carousel 
                   autoplay={false}
                   renderItem={this.state.looktype=="Unique"? this._renderItemSlider.bind(this):this._renderItemSliderPreBuilt.bind(this)}

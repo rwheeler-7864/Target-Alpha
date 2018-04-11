@@ -8,7 +8,7 @@ import styles from './styles';
 import { openDrawer } from '../../actions/drawer';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 
-const logo = require('../../../images/logo.gif');
+const logo = require('../../../images/whitelogo.png');
 
 class Login extends Component {
 
