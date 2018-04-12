@@ -88,22 +88,13 @@ const productItems = [
     pSelNumber: 0,
   },
   {
-    image: require('../../../images/lip1.png'),
-    type: 'lip',
-    loadImgDown: require('../../../images/lip1_down.png'),
-    loadImgUp: require('../../../images/lip1_up.png'),
-    name: 'Pop-arazzi Special Effects Nail Polish, Never Too Rich 104',
-    color: '#ff0022',
-    pSelNumber: 1,
-  },
-  {
     image: require('../../../images/makeup1.png'),
     type: 'makeup',
     loadImgLeft: require('../../../images/makeup1_left.png'),
     loadImgRight: require('../../../images/makeup1_right.png'),
     name: 'COVERGIRL* LashBlast Volume Mascara',
     color: '#ff5500',
-    pSelNumber: 2,
+    pSelNumber: 1,
   }
 ]
 const landmarkSize = 40;
@@ -352,7 +343,7 @@ class ReadyToApply extends Component {
                 flex: 1
               },
             ]}
-            source={productItems[1].loadImgDown}
+            source={productItems[2].loadImgDown}
           />
           </View>
           <View
@@ -379,7 +370,7 @@ class ReadyToApply extends Component {
                 flex: 1
               },
             ]}
-            source={productItems[1].loadImgUp}
+            source={productItems[2].loadImgUp}
           />
           </View>
         </View>
@@ -411,7 +402,7 @@ class ReadyToApply extends Component {
                 flex: 1
               },
             ]}
-            source={productItems[2].loadImgLeft}
+            source={productItems[1].loadImgLeft}
           />
           </View>
           <View
@@ -438,7 +429,7 @@ class ReadyToApply extends Component {
                 flex: 1
               },
             ]}
-            source={productItems[2].loadImgRight}
+            source={productItems[1].loadImgRight}
           />
           </View>
         </View>
@@ -447,8 +438,8 @@ class ReadyToApply extends Component {
       <View key={`landmarks-${face.faceID}`}>
         {this.state.pSelNumber == 0 && renderLandmarkEye(face.leftEyePosition, face.rightEyePosition, face.leftEyeOpenProbability, face.rightEyeOpenProbability, 'up', face.rollAngle, face.yawAngle)}
         {this.state.pSelNumber == 0 && renderLandmarkEye(face.leftEyePosition, face.rightEyePosition, face.leftEyeOpenProbability, face.rightEyeOpenProbability, 'down', face.rollAngle, face.yawAngle)}
-        {this.state.pSelNumber == 1 && renderLandmarkLip(face.leftMouthPosition, face.mouthPosition, face.rightMouthPosition, face.bottomMouthPosition, face.rollAngle, face.yawAngle)}
-        {this.state.pSelNumber == 2 && renderLandmarkCheek(face.leftCheekPosition, face.rightCheekPosition, Math.abs(face.leftEarPosition.x - face.leftMouthPosition.x),  Math.abs(face.leftEarPosition.y - face.leftMouthPosition.y),  Math.abs(face.rightEarPosition.x - face.rightMouthPosition.x),  Math.abs(face.rightEarPosition.y - face.rightMouthPosition.y), face.rollAngle, face.yawAngle)}
+        {this.state.pSelNumber == 2 && renderLandmarkLip(face.leftMouthPosition, face.mouthPosition, face.rightMouthPosition, face.bottomMouthPosition, face.rollAngle, face.yawAngle)}
+        {this.state.pSelNumber == 1 && renderLandmarkCheek(face.leftCheekPosition, face.rightCheekPosition, Math.abs(face.leftEarPosition.x - face.leftMouthPosition.x),  Math.abs(face.leftEarPosition.y - face.leftMouthPosition.y),  Math.abs(face.rightEarPosition.x - face.rightMouthPosition.x),  Math.abs(face.rightEarPosition.y - face.rightMouthPosition.y), face.rollAngle, face.yawAngle)}
       </View>
     );
   }
@@ -648,7 +639,7 @@ class ReadyToApply extends Component {
             }
 
             <View style={{backgroundColor:'transparent', width:'100%', flexDirection: 'row', position:'absolute', zIndex: 20,
-                 bottom: 60, left: 0, paddingLeft: this.state.looktype=='Pre-built'?width/6: width/4}}>
+                 bottom: 60, left: 0, paddingLeft: this.state.looktype=='Pre-built'?width/6: width/3}}>
             {
               this.state.looktype=='Unique' && productItems.map((item, index) => ( 
                 <View key={index}  style={{marginTop: 0, width: (width/6), height:width/6-6}}>
