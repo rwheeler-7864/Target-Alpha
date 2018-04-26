@@ -99,20 +99,22 @@ class ShoppingList extends Component {
   ],
   completeProducts : [
     {
-      image: require('../../../images/Softflex.jpg'),
-      name: 'Lorem Dress T-Shirt',
-      quantity: 2,
-      price: 40,
-      itemNo  : '#12304',
-      selected: false
+      image: require('../../../images/sexymotherpucker.png'),
+      name: 'Soap and Glory Sexy Mother Pucker XL',
+      inStock: 2,
+      price: 11.99,
+      itemNo  : '#51206723',
+      availabeInStock: true,
+      like: false,
     },
     {
-      image: require('../../../images/Softflex.jpg'),
-      name: 'Lorem Dress T-Shirt',
-      quantity: 2,
-      price: 40,
-      itemNo  : '#12304',
-      selected: false
+      image: require('../../../images/lashpro.png'),
+      name: 'Lash Pro Lash Growth',
+      inStock: 2,
+      price: 29.99,
+      itemNo  : '#51139369',
+      availabeInStock: true,
+      like: false,
     }
   ]
   };
