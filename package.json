@@ -42,7 +42,7 @@
     "class-autobind": "^0.1.4",
     "color": "^0.11.3",
     "expo": "24.0.2",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "metro-bundler": "^0.22.1",
     "moment": "2.19.0",
     "native-base": "2.3.6",
