@@ -44,7 +44,7 @@
     "expo": "24.0.2",
     "lodash": "^4.17.4",
     "metro-bundler": "^0.22.1",
-    "moment": "2.19.0",
+    "moment": "2.29.4",
     "native-base": "2.3.6",
     "prop-types": "^15.6.0",
     "react": "16.0.0",
